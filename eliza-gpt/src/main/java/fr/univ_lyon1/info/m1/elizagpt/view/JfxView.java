@@ -75,6 +75,11 @@ public class JfxView {
         hBox.setAlignment(Pos.BASELINE_LEFT);
         dialog.getChildren().add(hBox);
         // TODO: a click on this hbox should delete the message.
+        // deleting eliza messages on a click
+        hBox.setOnMouseClicked(e -> {
+            dialog.getChildren().remove(hBox);
+        });
+
     }
     
     private void sendMessage(final String text) {
