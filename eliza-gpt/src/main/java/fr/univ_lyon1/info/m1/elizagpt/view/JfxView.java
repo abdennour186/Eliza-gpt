@@ -223,7 +223,11 @@ public class JfxView {
         for (Node hBox : dialog.getChildren()) {
             for (Node label : ((HBox) hBox).getChildren()) {
                 String t = ((Label) label).getText();
-                if (!t.contains(text.getText())) {
+                Pattern pattern;
+                Matcher matcher;
+                pattern = Pattern.compile(text.getText(), Pattern.CASE_INSENSITIVE);
+                matcher = pattern.matcher(t);
+                if (!matcher.matches()) {
                     // Can delete it right now, we're iterating over the list.
                     toDelete.add((HBox) hBox);
                 }
