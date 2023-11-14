@@ -71,7 +71,7 @@ public class JfxView {
         HBox hBox = new HBox();
         final Label label = new Label(text);
         hBox.getChildren().add(label);
-        label.setStyle(USER_STYLE);
+        label.setStyle(ELIZA_STYLE);
         hBox.setAlignment(Pos.BASELINE_LEFT);
         dialog.getChildren().add(hBox);
         // TODO: a click on this hbox should delete the message.
@@ -86,7 +86,7 @@ public class JfxView {
         HBox hBox = new HBox();
         final Label label = new Label(text);
         hBox.getChildren().add(label);
-        label.setStyle(ELIZA_STYLE);
+        label.setStyle(USER_STYLE);
         hBox.setAlignment(Pos.BASELINE_RIGHT);
         dialog.getChildren().add(hBox);
         hBox.setOnMouseClicked(e -> {
@@ -170,10 +170,11 @@ public class JfxView {
     * TODO: this totally breaks the MVC pattern, never, ever, EVER do that.
     * @return
     */
+    // not working properly (always returns null : to be fixed later)
     private String getName() {
         for (Node hBox : dialog.getChildren()) {
             for (Node label : ((HBox) hBox).getChildren()) {
-                if (((Label) label).getStyle().equals("-fx-background-color: #A0E0A0;")) {
+                if (((Label) label).getStyle().equals(USER_STYLE)) {
                     String text = ((Label) label).getText();
                     Pattern pattern = Pattern.compile("Je m'appelle (.*)\\.",
                                                       Pattern.CASE_INSENSITIVE);
