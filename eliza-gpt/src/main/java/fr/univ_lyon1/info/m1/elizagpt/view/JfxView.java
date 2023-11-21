@@ -2,8 +2,9 @@ package fr.univ_lyon1.info.m1.elizagpt.view;
 
 import fr.univ_lyon1.info.m1.elizagpt.controller.Controller;
 
+import fr.univ_lyon1.info.m1.elizagpt.model.Message;
+import fr.univ_lyon1.info.m1.elizagpt.model.Payload;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -16,8 +17,7 @@ import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
 
 public class JfxView implements ViewObserver{
     private final VBox dialog;
@@ -34,7 +34,7 @@ public class JfxView implements ViewObserver{
     public JfxView(final Stage stage, final int width, final int height , Controller controller) {
 
         this.controller = controller;
-        controller.registerView(this);
+        controller.registerObserver(this);
 
         stage.setTitle("Eliza GPT");
 
@@ -100,7 +100,8 @@ public class JfxView implements ViewObserver{
         searchTextLabel = new Label();
         final Button undo = new Button("Undo search");
         undo.setOnAction(e -> {
-            throw new UnsupportedOperationException("TODO: implement undo for search");
+            controller.undoSearch();
+            //throw new UnsupportedOperationException("TODO: implement undo for search");
         });
         secondLine.getChildren().addAll(send, searchTextLabel, undo);
         final VBox input = new VBox();
@@ -115,21 +116,7 @@ public class JfxView implements ViewObserver{
         } else {
             searchTextLabel.setText("Searching for: " + currentSearchText);
         }
-        List<HBox> toDelete = new ArrayList<>();
-        for (Node hBox : dialog.getChildren()) {
-            for (Node label : ((HBox) hBox).getChildren()) {
-                String t = ((Label) label).getText();
-                Pattern pattern;
-                Matcher matcher;
-                pattern = Pattern.compile(text.getText(), Pattern.CASE_INSENSITIVE);
-                matcher = pattern.matcher(t);
-                if (!matcher.matches()) {
-                    // Can delete it right now, we're iterating over the list.
-                    toDelete.add((HBox) hBox);
-                }
-            }
-        }
-        dialog.getChildren().removeAll(toDelete);
+        controller.search(currentSearchText);
         text.setText("");
     }
 
@@ -150,7 +137,7 @@ public class JfxView implements ViewObserver{
     }
 
     @Override
-    public void onUserAddUpdate(Controller.Payload payload) {
+    public void onUserAddUpdate(Payload payload) {
         HBox hBox = new HBox();
         final Label label = new Label(payload.getNewMessage());
         hBox.getChildren().add(label);
@@ -159,12 +146,11 @@ public class JfxView implements ViewObserver{
         dialog.getChildren().add(hBox);
         hBox.setOnMouseClicked(e -> {
             controller.deleteMessage(dialog.getChildren().indexOf(hBox));
-            dialog.getChildren().remove(hBox);
         });
     }
 
     @Override
-    public void onElizaAddUpdate(Controller.Payload payload) {
+    public void onElizaAddUpdate(Payload payload) {
         HBox hBox = new HBox();
         final Label label = new Label(payload.getNewMessage());
         hBox.getChildren().add(label);
@@ -173,14 +159,56 @@ public class JfxView implements ViewObserver{
         dialog.getChildren().add(hBox);
         hBox.setOnMouseClicked(e -> {
             controller.deleteMessage(dialog.getChildren().indexOf(hBox));
-            dialog.getChildren().remove(hBox);
         });
     }
 
     @Override
-    public void onDeleteUpdate(Controller.Payload payload) {
+    public void onDeleteUpdate(Payload payload) {
         HBox toBeDeleted = (HBox) dialog.getChildren().get(payload.getDeletedMessageIndex());
         dialog.getChildren().remove(toBeDeleted);
     }
 
+    @Override
+    public void onSearchUpdate(Payload payload) {
+         ArrayList<Message> searchResult = payload.getSearchResult();
+         System.out.println(searchResult);
+         List<HBox> result = new ArrayList<>();
+         for(Message message : searchResult){
+             HBox hBox = new HBox();
+             final Label label = new Label(message.getText());
+             label.setStyle(
+                     message.getSender() == Message.Sender.ELIZA ?
+                             ELIZA_STYLE : USER_STYLE
+             );
+             hBox.setAlignment(
+                     message.getSender() == Message.Sender.ELIZA ?
+                             Pos.BASELINE_LEFT : Pos.BASELINE_RIGHT
+             );
+             result.add(hBox);
+         }
+         dialog.getChildren().clear();
+         dialog.getChildren().addAll(result);
+    }
+
+    @Override
+    public void onUndoSearchUpdate(Payload payload) {
+        ArrayList<Message> searchResult = payload.getSearchResult();
+        System.out.println(searchResult);
+        List<HBox> result = new ArrayList<>();
+        for(Message message : searchResult){
+            HBox hBox = new HBox();
+            final Label label = new Label(message.getText());
+            label.setStyle(
+                    message.getSender() == Message.Sender.ELIZA ?
+                            ELIZA_STYLE : USER_STYLE
+            );
+            hBox.setAlignment(
+                    message.getSender() == Message.Sender.ELIZA ?
+                            Pos.BASELINE_LEFT : Pos.BASELINE_RIGHT
+            );
+            result.add(hBox);
+        }
+        dialog.getChildren().clear();
+        dialog.getChildren().addAll(result);
+    }
 }

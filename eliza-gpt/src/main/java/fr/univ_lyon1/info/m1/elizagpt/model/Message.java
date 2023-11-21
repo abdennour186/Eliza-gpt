@@ -32,4 +32,12 @@ public class Message {
     public void setSender(Sender sender) {
         this.sender = sender;
     }
+
+    @Override
+    public String toString() {
+        return "Message{" +
+                "text='" + text + '\'' +
+                ", sender=" + sender +
+                '}';
+    }
 }
