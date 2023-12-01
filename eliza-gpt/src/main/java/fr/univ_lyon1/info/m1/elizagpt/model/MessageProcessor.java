@@ -16,6 +16,7 @@ public class MessageProcessor {
 
     public MessageProcessor() {
         this.messages = new ArrayList<>();
+        //this.messages.add(new Message("Bonjour" , Message.Sender.ELIZA));
     }
 
 
@@ -74,7 +75,7 @@ public class MessageProcessor {
         for(Message message : this.messages){
             pattern = Pattern.compile(text , Pattern.CASE_INSENSITIVE);
             matcher = pattern.matcher(message.getText());
-            if(matcher.matches()){
+            if(matcher.find()){
                 result.add(message);
             }
         }

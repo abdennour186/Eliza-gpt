@@ -30,7 +30,6 @@ public class Controller extends Subject{
     public void search(String text){
         ArrayList<Message> result =  model.search(text);
         Payload payload = new Payload(null , -1  , result);
-        System.out.println("from controller : " + result);
         notifyObservers("SEARCH" , null , payload);
     }
 

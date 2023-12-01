@@ -55,6 +55,8 @@ public class JfxView implements ViewObserver{
         root.getChildren().add(input);
         //replyToUser("Bonjour");
 
+       // controller.addElizaMessage("Bonjour");
+
         // Everything's ready: add it to the scene and display it
         final Scene scene = new Scene(root, width, height);
         stage.setScene(scene);
@@ -184,6 +186,7 @@ public class JfxView implements ViewObserver{
                      message.getSender() == Message.Sender.ELIZA ?
                              Pos.BASELINE_LEFT : Pos.BASELINE_RIGHT
              );
+             hBox.getChildren().add(label);
              result.add(hBox);
          }
          dialog.getChildren().clear();
@@ -193,7 +196,6 @@ public class JfxView implements ViewObserver{
     @Override
     public void onUndoSearchUpdate(Payload payload) {
         ArrayList<Message> searchResult = payload.getSearchResult();
-        System.out.println(searchResult);
         List<HBox> result = new ArrayList<>();
         for(Message message : searchResult){
             HBox hBox = new HBox();
@@ -206,6 +208,7 @@ public class JfxView implements ViewObserver{
                     message.getSender() == Message.Sender.ELIZA ?
                             Pos.BASELINE_LEFT : Pos.BASELINE_RIGHT
             );
+            hBox.getChildren().add(label);
             result.add(hBox);
         }
         dialog.getChildren().clear();
