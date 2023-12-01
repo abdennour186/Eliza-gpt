@@ -16,7 +16,9 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class JfxView implements ViewObserver{
@@ -147,7 +149,8 @@ public class JfxView implements ViewObserver{
         hBox.setAlignment(Pos.BASELINE_RIGHT);
         dialog.getChildren().add(hBox);
         hBox.setOnMouseClicked(e -> {
-            controller.deleteMessage(dialog.getChildren().indexOf(hBox));
+            int index = dialog.getChildren().indexOf(hBox);
+            controller.deleteMessage(index,index);
         });
     }
 
@@ -160,7 +163,8 @@ public class JfxView implements ViewObserver{
         hBox.setAlignment(Pos.BASELINE_LEFT);
         dialog.getChildren().add(hBox);
         hBox.setOnMouseClicked(e -> {
-            controller.deleteMessage(dialog.getChildren().indexOf(hBox));
+            int index = dialog.getChildren().indexOf(hBox);
+            controller.deleteMessage(index , index);
         });
     }
 
@@ -172,10 +176,13 @@ public class JfxView implements ViewObserver{
 
     @Override
     public void onSearchUpdate(Payload payload) {
-         ArrayList<Message> searchResult = payload.getSearchResult();
+         Map<Integer , Message> searchResult = payload.getSearchResult();
          System.out.println(searchResult);
          List<HBox> result = new ArrayList<>();
-         for(Message message : searchResult){
+         int currentIndex = 0;
+         for(Map.Entry<Integer,Message> entry : searchResult.entrySet()){
+             int originalIndex = entry.getKey();
+             Message message = entry.getValue();
              HBox hBox = new HBox();
              final Label label = new Label(message.getText());
              label.setStyle(
@@ -187,17 +194,26 @@ public class JfxView implements ViewObserver{
                              Pos.BASELINE_LEFT : Pos.BASELINE_RIGHT
              );
              hBox.getChildren().add(label);
+             int finalCurrentIndex = currentIndex;
+             hBox.setOnMouseClicked(e -> {
+                    controller.deleteMessage(originalIndex , finalCurrentIndex);
+             });
              result.add(hBox);
+             currentIndex++;
          }
+
          dialog.getChildren().clear();
          dialog.getChildren().addAll(result);
     }
 
     @Override
     public void onUndoSearchUpdate(Payload payload) {
-        ArrayList<Message> searchResult = payload.getSearchResult();
+        Map<Integer , Message> searchResult = payload.getSearchResult();
         List<HBox> result = new ArrayList<>();
-        for(Message message : searchResult){
+        int currentIndex = 0;
+        for(Map.Entry<Integer , Message> entry : searchResult.entrySet()){
+            int originalIndex = entry.getKey();
+            Message message = entry.getValue();
             HBox hBox = new HBox();
             final Label label = new Label(message.getText());
             label.setStyle(
@@ -208,8 +224,13 @@ public class JfxView implements ViewObserver{
                     message.getSender() == Message.Sender.ELIZA ?
                             Pos.BASELINE_LEFT : Pos.BASELINE_RIGHT
             );
+            int finalCurrentIndex = currentIndex;
+            hBox.setOnMouseClicked(e -> {
+                controller.deleteMessage(originalIndex,finalCurrentIndex);
+            });
             hBox.getChildren().add(label);
             result.add(hBox);
+            currentIndex++;
         }
         dialog.getChildren().clear();
         dialog.getChildren().addAll(result);

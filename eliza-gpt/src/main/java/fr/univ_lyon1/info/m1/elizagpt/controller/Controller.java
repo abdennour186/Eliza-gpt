@@ -6,6 +6,8 @@ import fr.univ_lyon1.info.m1.elizagpt.model.Payload;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Controller extends Subject{
     MessageProcessor model;
@@ -28,19 +30,24 @@ public class Controller extends Subject{
     }
 
     public void search(String text){
-        ArrayList<Message> result =  model.search(text);
+        Map<Integer , Message> result =  model.search(text);
         Payload payload = new Payload(null , -1  , result);
         notifyObservers("SEARCH" , null , payload);
     }
 
     public void undoSearch(){
-        Payload payload = new Payload(null , -1 , model.getMessages());
+        Map<Integer , Message> originalMessages = new HashMap<>();
+        for(int i = 0;i < model.getMessages().size() ; i++){
+            Message current = model.getMessages().get(i);
+            originalMessages.put(i,current);
+        }
+        Payload payload = new Payload(null , -1 , originalMessages);
         notifyObservers("UNSEARCH" , null , payload);
     }
 
-    public void deleteMessage(int index){
-        this.model.deleteMessage(index);
-        notifyObservers("DELETE" ,null ,new Payload(null , index , null));
+    public void deleteMessage(int originalIndex,int currentIndex){
+        this.model.deleteMessage(originalIndex);
+        notifyObservers("DELETE" ,null ,new Payload(null , currentIndex , null));
     }
 
     public String generateElizaResponse(String userMessage){
