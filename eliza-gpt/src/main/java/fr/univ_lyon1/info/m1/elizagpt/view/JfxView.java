@@ -94,11 +94,11 @@ public class JfxView implements ViewObserver{
         firstLine.setAlignment(Pos.BASELINE_LEFT);
         secondLine.setAlignment(Pos.BASELINE_LEFT);
         searchText = new TextField();
-        searchText.setOnAction(e -> searchText(searchText));
+        searchText.setOnAction(e -> searchText());
         firstLine.getChildren().add(searchText);
         final Button send = new Button("Search");
         send.setOnAction(e -> {
-            searchText(searchText);
+            searchText();
         });
         searchTextLabel = new Label();
         final Button undo = new Button("Undo search");
@@ -112,15 +112,15 @@ public class JfxView implements ViewObserver{
         return input;
     }
 
-    private void searchText(final TextField text) {
-        String currentSearchText = text.getText();
+    private void searchText() {
+        String currentSearchText = this.searchText.getText();
         if (currentSearchText == null) {
             searchTextLabel.setText("No active search");
         } else {
-            searchTextLabel.setText("Searching for: " + currentSearchText);
+            controller.search(currentSearchText);
+            this.searchText.setText("");
         }
-        controller.search(currentSearchText);
-        text.setText("");
+
     }
 
     private Pane createInputWidget() {
@@ -157,12 +157,14 @@ public class JfxView implements ViewObserver{
 
     @Override
     public void onSearchUpdate(Payload payload) {
+        searchTextLabel.setText("Searching for: " + payload.getSearchText());
         ArrayList<Message> searchResult = payload.getSearchResult();
         processSearchResult(searchResult);
     }
 
     @Override
     public void onUndoSearchUpdate(Payload payload) {
+         searchTextLabel.setText(null);
          ArrayList<Message> allMessages = payload.getSearchResult();
          processSearchResult(allMessages);
     }

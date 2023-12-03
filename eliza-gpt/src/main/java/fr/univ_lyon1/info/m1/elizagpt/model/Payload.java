@@ -1,6 +1,5 @@
 package fr.univ_lyon1.info.m1.elizagpt.model;
 import java.util.ArrayList;
-import java.util.Map;
 
 public class Payload{
     private final Message newMessage;
@@ -9,10 +8,13 @@ public class Payload{
     // to store the retrieved messages
     private final ArrayList<Message> searchResult;
 
-    public Payload(Message newMessage, int deletedMessageId, ArrayList<Message> searchResult) {
+    private final String searchText;
+
+    public Payload(Message newMessage, int deletedMessageId, ArrayList<Message> searchResult,String searchText) {
         this.newMessage = newMessage;
         this.deletedMessageId = deletedMessageId;
         this.searchResult = searchResult;
+        this.searchText = searchText;
     }
 
     public Message getNewMessage() {
@@ -25,5 +27,9 @@ public class Payload{
 
     public ArrayList<Message> getSearchResult() {
         return searchResult;
+    }
+
+    public String getSearchText() {
+        return searchText;
     }
 }
