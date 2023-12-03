@@ -1,28 +1,29 @@
 package fr.univ_lyon1.info.m1.elizagpt.model;
+import java.util.ArrayList;
 import java.util.Map;
 
 public class Payload{
-    private final String newMessage;
-    private final int deletedMessageIndex;
+    private final Message newMessage;
+    private final int deletedMessageId;
 
     // to store the retrieved messages
-    private final Map<Integer , Message> searchResult;
+    private final ArrayList<Message> searchResult;
 
-    public Payload(String newMessage, int deletedMessageIndex, Map<Integer , Message> searchResult) {
+    public Payload(Message newMessage, int deletedMessageId, ArrayList<Message> searchResult) {
         this.newMessage = newMessage;
-        this.deletedMessageIndex = deletedMessageIndex;
+        this.deletedMessageId = deletedMessageId;
         this.searchResult = searchResult;
     }
 
-    public String getNewMessage() {
+    public Message getNewMessage() {
         return newMessage;
     }
 
-    public int getDeletedMessageIndex() {
-        return deletedMessageIndex;
+    public int getDeletedMessageId() {
+        return deletedMessageId;
     }
 
-    public Map<Integer,Message> getSearchResult() {
+    public ArrayList<Message> getSearchResult() {
         return searchResult;
     }
 }

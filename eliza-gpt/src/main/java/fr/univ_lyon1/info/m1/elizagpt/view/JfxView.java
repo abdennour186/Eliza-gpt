@@ -15,10 +15,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 public class JfxView implements ViewObserver{
@@ -27,6 +24,8 @@ public class JfxView implements ViewObserver{
     private TextField searchText = null;
     private Label searchTextLabel = null;
     private final Controller controller;
+
+    private final Map<Integer , HBox> messageToHbox = new HashMap<>();
 
 
     /**
@@ -140,99 +139,72 @@ public class JfxView implements ViewObserver{
         return input;
     }
 
-    @Override
-    public void onUserAddUpdate(Payload payload) {
-        HBox hBox = new HBox();
-        final Label label = new Label(payload.getNewMessage());
-        hBox.getChildren().add(label);
-        label.setStyle(USER_STYLE);
-        hBox.setAlignment(Pos.BASELINE_RIGHT);
-        dialog.getChildren().add(hBox);
-        hBox.setOnMouseClicked(e -> {
-            int index = dialog.getChildren().indexOf(hBox);
-            controller.deleteMessage(index,index);
-        });
-    }
 
     @Override
-    public void onElizaAddUpdate(Payload payload) {
-        HBox hBox = new HBox();
-        final Label label = new Label(payload.getNewMessage());
-        hBox.getChildren().add(label);
-        label.setStyle(ELIZA_STYLE);
-        hBox.setAlignment(Pos.BASELINE_LEFT);
-        dialog.getChildren().add(hBox);
-        hBox.setOnMouseClicked(e -> {
-            int index = dialog.getChildren().indexOf(hBox);
-            controller.deleteMessage(index , index);
-        });
+    public void onMessageAddUpdate(Payload payload) {
+            HBox newHbox = createHboxFromMessage(payload.getNewMessage());
+            messageToHbox.put(payload.getNewMessage().getId(),newHbox);
+            dialog.getChildren().add(newHbox);
     }
 
     @Override
     public void onDeleteUpdate(Payload payload) {
-        HBox toBeDeleted = (HBox) dialog.getChildren().get(payload.getDeletedMessageIndex());
+        int messageId = payload.getDeletedMessageId();
+        HBox toBeDeleted = messageToHbox.get(messageId);
         dialog.getChildren().remove(toBeDeleted);
+        messageToHbox.remove(messageId);
     }
 
     @Override
     public void onSearchUpdate(Payload payload) {
-         Map<Integer , Message> searchResult = payload.getSearchResult();
-         System.out.println(searchResult);
-         List<HBox> result = new ArrayList<>();
-         int currentIndex = 0;
-         for(Map.Entry<Integer,Message> entry : searchResult.entrySet()){
-             int originalIndex = entry.getKey();
-             Message message = entry.getValue();
-             HBox hBox = new HBox();
-             final Label label = new Label(message.getText());
-             label.setStyle(
-                     message.getSender() == Message.Sender.ELIZA ?
-                             ELIZA_STYLE : USER_STYLE
-             );
-             hBox.setAlignment(
-                     message.getSender() == Message.Sender.ELIZA ?
-                             Pos.BASELINE_LEFT : Pos.BASELINE_RIGHT
-             );
-             hBox.getChildren().add(label);
-             int finalCurrentIndex = currentIndex;
-             hBox.setOnMouseClicked(e -> {
-                    controller.deleteMessage(originalIndex , finalCurrentIndex);
-             });
-             result.add(hBox);
-             currentIndex++;
-         }
-
-         dialog.getChildren().clear();
-         dialog.getChildren().addAll(result);
+        ArrayList<Message> searchResult = payload.getSearchResult();
+        processSearchResult(searchResult);
     }
 
     @Override
     public void onUndoSearchUpdate(Payload payload) {
-        Map<Integer , Message> searchResult = payload.getSearchResult();
-        List<HBox> result = new ArrayList<>();
-        int currentIndex = 0;
-        for(Map.Entry<Integer , Message> entry : searchResult.entrySet()){
-            int originalIndex = entry.getKey();
-            Message message = entry.getValue();
-            HBox hBox = new HBox();
-            final Label label = new Label(message.getText());
-            label.setStyle(
-                    message.getSender() == Message.Sender.ELIZA ?
-                            ELIZA_STYLE : USER_STYLE
-            );
-            hBox.setAlignment(
-                    message.getSender() == Message.Sender.ELIZA ?
-                            Pos.BASELINE_LEFT : Pos.BASELINE_RIGHT
-            );
-            int finalCurrentIndex = currentIndex;
-            hBox.setOnMouseClicked(e -> {
-                controller.deleteMessage(originalIndex,finalCurrentIndex);
-            });
-            hBox.getChildren().add(label);
-            result.add(hBox);
-            currentIndex++;
+         ArrayList<Message> allMessages = payload.getSearchResult();
+         processSearchResult(allMessages);
+    }
+
+
+    private HBox createHboxFromMessage(Message message) {
+        String messageText = message.getText();
+        HBox hBox = new HBox();
+        final Label label = new Label(messageText);
+
+        label.setStyle(
+                message.getSender() == Message.Sender.ELIZA ?
+                        ELIZA_STYLE : USER_STYLE
+        );
+        hBox.setAlignment(
+                message.getSender() == Message.Sender.ELIZA ?
+                        Pos.BASELINE_LEFT : Pos.BASELINE_RIGHT
+        );
+
+        hBox.getChildren().add(label);
+
+        hBox.setOnMouseClicked(e -> {
+            controller.deleteMessage(message.getId());
+        });
+        return hBox;
+    }
+
+    private void processSearchResult(ArrayList<Message> messages) {
+
+        messageToHbox.clear();
+
+        ArrayList<HBox> result = new ArrayList<>();
+        for (Message message : messages) {
+                HBox hBox = createHboxFromMessage(message);
+                result.add(hBox);
+                messageToHbox.put(message.getId() , hBox);
         }
+
         dialog.getChildren().clear();
         dialog.getChildren().addAll(result);
     }
+
+
+
 }

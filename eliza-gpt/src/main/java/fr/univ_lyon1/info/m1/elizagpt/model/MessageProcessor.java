@@ -56,27 +56,26 @@ public class MessageProcessor {
 
 
 
-    public void addMessage(String text, Message.Sender sender){
+    public Message addMessage(String text, Message.Sender sender){
         String message = normalize(text);
-        this.messages.add(new Message(message , sender));
+        Message newMessage = new Message(message , sender);
+        this.messages.add(newMessage);
+        return newMessage;
     }
 
-    public void deleteMessage(int index){
-        this.messages.remove(index);
+    public void deleteMessage(int messageId){
+        this.messages.removeIf(message -> message.getId() == messageId);
     }
 
-    public Map<Integer,Message> search(String text){
-        // we used a linked hash map to maintain the order
-        // of the messages where the search text appears
-        Map<Integer , Message> result = new LinkedHashMap<>();
+    public ArrayList<Message> search(String text){
+        ArrayList<Message> result = new ArrayList<>();
         Pattern pattern;
         Matcher matcher;
-        for(int i = 0 ; i < messages.size();i++){
-            Message current = messages.get(i);
+        for(Message message : messages){
             pattern = Pattern.compile(text , Pattern.CASE_INSENSITIVE);
-            matcher = pattern.matcher(current.getText());
+            matcher = pattern.matcher(message.getText());
             if(matcher.find()){
-                result.put(i,current);
+                result.add(message);
             }
         }
         return result;

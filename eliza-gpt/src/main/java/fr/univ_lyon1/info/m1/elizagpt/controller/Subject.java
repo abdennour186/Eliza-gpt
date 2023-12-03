@@ -13,13 +13,11 @@ public abstract class Subject {
         this.observers = new ArrayList<>();
     }
 
-    public void notifyObservers(String action, Message.Sender actor, Payload payload){
+    public void notifyObservers(String action, Payload payload){
            observers.forEach(observer -> {
                switch (action){
                    case "ADD":
-                       if(actor == Message.Sender.ELIZA)
-                           observer.onElizaAddUpdate(payload);
-                       else observer.onUserAddUpdate(payload);
+                       observer.onMessageAddUpdate(payload);
                        break;
                    case "DELETE":
                         observer.onDeleteUpdate(payload);
