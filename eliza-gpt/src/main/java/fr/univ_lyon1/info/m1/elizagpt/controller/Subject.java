@@ -7,23 +7,30 @@ import java.util.ArrayList;
 public abstract class Subject {
     ArrayList<ViewObserver> observers;
 
+    enum ACTION{
+        ADD,
+        DELETE,
+        SEARCH,
+        UNDOSEARCH
+    }
+
     public  Subject(){
         this.observers = new ArrayList<>();
     }
 
-    public void notifyObservers(String action, Payload payload){
+    public void notifyObservers(ACTION action, Payload payload){
            observers.forEach(observer -> {
                switch (action){
-                   case "ADD":
+                   case ADD:
                        observer.onMessageAddUpdate(payload);
                        break;
-                   case "DELETE":
+                   case DELETE:
                         observer.onDeleteUpdate(payload);
                         break;
-                   case "SEARCH":
+                   case SEARCH:
                         observer.onSearchUpdate(payload);
                         break;
-                   case "UNSEARCH":
+                   case UNDOSEARCH:
                         observer.onUndoSearchUpdate(payload);
                         break;
                    default:

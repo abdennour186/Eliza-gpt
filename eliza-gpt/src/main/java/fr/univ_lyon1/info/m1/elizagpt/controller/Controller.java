@@ -21,30 +21,30 @@ public class Controller extends Subject{
     public void addUserMessage(String text){
            Message newMessage = model.addMessage(text , Message.Sender.USER);
            Payload payload = new Payload(newMessage , -1 , null,null);
-           notifyObservers("ADD",payload);
+           notifyObservers(ACTION.ADD,payload);
     }
 
     public void addElizaMessage(String text){
           Message newMessage =  model.addMessage(text , Message.Sender.ELIZA);
           Payload payload = new Payload(newMessage , -1 , null,null);
-          notifyObservers("ADD" ,payload);
+          notifyObservers(ACTION.ADD ,payload);
     }
 
     public void search(String text){
         ArrayList<Message> result =  model.search(text);
         Payload payload = new Payload(null , -1  , result,text);
-        notifyObservers("SEARCH" , payload);
+        notifyObservers(ACTION.SEARCH , payload);
     }
 
     public void undoSearch(){
         Payload payload = new Payload(null , -1 , model.getMessages(),"");
-        notifyObservers("UNSEARCH" , payload);
+        notifyObservers(ACTION.UNDOSEARCH, payload);
     }
 
     public void deleteMessage(int messageId){
         this.model.deleteMessage(messageId);
         Payload payload = new Payload(null , messageId , null,null);
-        notifyObservers("DELETE" , payload);
+        notifyObservers(ACTION.DELETE , payload);
     }
 
     public String generateElizaResponse(String userMessage){
