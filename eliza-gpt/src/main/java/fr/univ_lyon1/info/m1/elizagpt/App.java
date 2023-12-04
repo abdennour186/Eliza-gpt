@@ -20,10 +20,10 @@ public class App extends Application {
 
 
         Controller controller = new Controller(new MessageProcessor());
-        new JfxView(stage , 600 , 600 , controller);
+        new JfxView(stage, 600, 600, controller);
 
         // Second view (uncomment to activate)
-        new JfxView(new Stage(), 400, 400 , controller);
+        new JfxView(new Stage(), 400, 400, controller);
     }
 
 
