@@ -1,11 +1,9 @@
 package fr.univ_lyon1.info.m1.elizagpt.view;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import fr.univ_lyon1.info.m1.elizagpt.model.MessageProcessor;
+import fr.univ_lyon1.info.m1.elizagpt.controller.Controller;
+import fr.univ_lyon1.info.m1.elizagpt.model.Message;
+import fr.univ_lyon1.info.m1.elizagpt.model.Payload;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -15,26 +13,40 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.Random;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
- * Main class of the View (GUI) of the application.
+ * The JfxView class represents the JavaFX-based
+ * graphical user interface for the Eliza GPT application.
+ * It provides a chat-like interface where users
+ * can interact with Eliza and view messages.
  */
-public class JfxView {
+public class JfxView implements ViewObserver {
     private final VBox dialog;
     private TextField text = null;
     private TextField searchText = null;
     private Label searchTextLabel = null;
-    private MessageProcessor processor = new MessageProcessor();
-    private final Random random = new Random();
+    private final Controller controller;
+
+    private final Map<Integer, HBox> messageToHbox = new HashMap<>();
+
     /**
-     * Create the main view of the application.
+     * Creates the main view of the application.
+     *
+     * @param stage      The JavaFX stage.
+     * @param width      The width of the stage.
+     * @param height     The height of the stage.
+     * @param controller The controller managing the application logic.
      */
-        // TODO: style error in the following line. Check that checkstyle finds it, and then fix it.
-        public JfxView(final Stage stage, final int width, final int height) {
+    public JfxView(final Stage stage, final int width,
+                   final int height, final Controller controller) {
+        this.controller = controller;
+        controller.registerObserver(this);
+
         stage.setTitle("Eliza GPT");
 
         final VBox root = new VBox(10);
@@ -52,7 +64,6 @@ public class JfxView {
 
         final Pane input = createInputWidget();
         root.getChildren().add(input);
-        replyToUser("Bonjour");
 
         // Everything's ready: add it to the scene and display it
         final Scene scene = new Scene(root, width, height);
@@ -68,188 +79,196 @@ public class JfxView {
     static final String ELIZA_STYLE = "-fx-background-color: #A0A0E0; " + BASE_STYLE;
 
     private void replyToUser(final String text) {
-        HBox hBox = new HBox();
-        final Label label = new Label(text);
-        hBox.getChildren().add(label);
-        label.setStyle(USER_STYLE);
-        hBox.setAlignment(Pos.BASELINE_LEFT);
-        dialog.getChildren().add(hBox);
-        // TODO: a click on this hbox should delete the message.
-        // deleting eliza messages on a click
-        hBox.setOnMouseClicked(e -> {
-            dialog.getChildren().remove(hBox);
-        });
-
+        controller.addElizaMessage(text);
     }
-    
+
     private void sendMessage(final String text) {
-        HBox hBox = new HBox();
-        final Label label = new Label(text);
-        hBox.getChildren().add(label);
-        label.setStyle(ELIZA_STYLE);
-        hBox.setAlignment(Pos.BASELINE_RIGHT);
-        dialog.getChildren().add(hBox);
-        hBox.setOnMouseClicked(e -> {
-            dialog.getChildren().remove(hBox);
-        });
-    
-        String normalizedText = processor.normalize(text);
-    
-        Pattern pattern;
-        Matcher matcher;
-    
-        // First, try to answer specifically to what the user said
-        pattern = Pattern.compile(".*Je m'appelle (.*)\\.", Pattern.CASE_INSENSITIVE);
-        matcher = pattern.matcher(normalizedText);
-        if (matcher.matches()) {
-            replyToUser("Bonjour " + matcher.group(1) + ".");
-            return;
-        }
-        pattern = Pattern.compile("Quel est mon nom \\?", Pattern.CASE_INSENSITIVE);
-        matcher = pattern.matcher(normalizedText);
-        if (matcher.matches()) {
-            if (getName() != null) {
-                replyToUser("Votre nom est " + getName() + ".");
-            } else {
-                replyToUser("Je ne connais pas votre nom.");
-            }
-            return;
-        }
-        pattern = Pattern.compile("Qui est le plus (.*) \\?", Pattern.CASE_INSENSITIVE);
-        matcher = pattern.matcher(normalizedText);
-        if (matcher.matches()) {
-            replyToUser("Le plus " + matcher.group(1)
-                        + " est bien sûr votre enseignant de MIF01 !");
-            return;
-        }
-        pattern = Pattern.compile("(Je .*)\\.", Pattern.CASE_INSENSITIVE);
-        matcher = pattern.matcher(normalizedText);
-        if (matcher.matches()) {
-            final String startQuestion = processor.pickRandom(new String[] {
-                "Pourquoi dites-vous que ",
-                "Pourquoi pensez-vous que ",
-                "Êtes-vous sûr que ",
-            });
-            replyToUser(startQuestion + processor.firstToSecondPerson(matcher.group(1)) + " ?");
-            return;
-        }
-        // Questions Detector
-        pattern = Pattern.compile(".*\\?");
-        matcher = pattern.matcher(normalizedText);
-        if (matcher.matches()) {
-            final String randomResponse = processor.pickRandom(new String[] {
-                    "Je vous renvoie la question.",
-                    "Ici, c'est moi qui pose les questions.",
-            });
-            replyToUser(randomResponse);
-            return;
-        }
-        // Nothing clever to say, answer randomly
-        if (random.nextBoolean()) {
-            replyToUser("Il faut beau aujourd'hui, vous ne trouvez pas ?");
-            return;
-        }
-        if (random.nextBoolean()) {
-            replyToUser("Je ne comprends pas.");
-            return;
-        }
-        if (random.nextBoolean()) {
-            replyToUser("Hmmm, hmm ...");
-            return;
-        }
-        // Default answer
-        if (getName() != null) {
-            replyToUser("Qu'est-ce qui vous fait dire cela, " + getName() + " ?");
-        } else {
-            replyToUser("Qu'est-ce qui vous fait dire cela ?");
-        }
+        controller.addUserMessage(text);
+        String elizaResponse = controller.generateElizaResponse(text);
+        replyToUser(elizaResponse);
     }
 
     /**
-    * Extract the name of the user from the dialog.
-    * TODO: this totally breaks the MVC pattern, never, ever, EVER do that.
-    * @return
-    */
-    private String getName() {
-        for (Node hBox : dialog.getChildren()) {
-            for (Node label : ((HBox) hBox).getChildren()) {
-                if (((Label) label).getStyle().equals("-fx-background-color: #A0E0A0;")) {
-                    String text = ((Label) label).getText();
-                    Pattern pattern = Pattern.compile("Je m'appelle (.*)\\.",
-                                                      Pattern.CASE_INSENSITIVE);
-                    Matcher matcher = pattern.matcher(text);
-                    if (matcher.matches()) {
-                        return matcher.group(1);
-                    }
-                }
-            }
-        }
-        return null;
-    }
-
+     * Extract the name of the user from the dialog.
+     * TODO: this totally breaks the MVC pattern, never, ever, EVER do that.
+     *
+     * @return The extracted name of the user (not working properly, to be fixed later).
+     */
     private Pane createSearchWidget() {
         final HBox firstLine = new HBox();
         final HBox secondLine = new HBox();
         firstLine.setAlignment(Pos.BASELINE_LEFT);
         secondLine.setAlignment(Pos.BASELINE_LEFT);
         searchText = new TextField();
-        searchText.setOnAction(e -> {
-            searchText(searchText);
-        });
+        searchText.setOnAction(e -> searchText());
         firstLine.getChildren().add(searchText);
         final Button send = new Button("Search");
-        send.setOnAction(e -> {
-            searchText(searchText);
-        });
+        send.setOnAction(e -> searchText());
         searchTextLabel = new Label();
         final Button undo = new Button("Undo search");
-        undo.setOnAction(e -> {
-            throw new UnsupportedOperationException("TODO: implement undo for search");
-        });
+        undo.setOnAction(e -> controller.undoSearch());
         secondLine.getChildren().addAll(send, searchTextLabel, undo);
         final VBox input = new VBox();
         input.getChildren().addAll(firstLine, secondLine);
         return input;
     }
-
-    private void searchText(final TextField text) {
-        String currentSearchText = text.getText();
+    /**
+     * Handles the user's action when initiating a search.
+     * <p>
+     * If the search text is not empty, this method triggers a search operation
+     * through the controller, updates the search label, and clears the search text field.
+     * If the search text is empty, it updates the search label to indicate no active search.
+     */
+    private void searchText() {
+        String currentSearchText = this.searchText.getText();
         if (currentSearchText == null) {
             searchTextLabel.setText("No active search");
         } else {
-            searchTextLabel.setText("Searching for: " + currentSearchText);
+            controller.search(currentSearchText);
+            this.searchText.setText("");
         }
-        List<HBox> toDelete = new ArrayList<>();
-        for (Node hBox : dialog.getChildren()) {
-            for (Node label : ((HBox) hBox).getChildren()) {
-                String t = ((Label) label).getText();
-                Pattern pattern;
-                Matcher matcher;
-                pattern = Pattern.compile(text.getText(), Pattern.CASE_INSENSITIVE);
-                matcher = pattern.matcher(t);
-                if (!matcher.matches()) {
-                    // Can delete it right now, we're iterating over the list.
-                    toDelete.add((HBox) hBox);
-                }
-            }
-        }
-        dialog.getChildren().removeAll(toDelete);
-        text.setText("");
     }
 
+    /**
+     * Creates and returns a user input widget, consisting of a text field and a "Send" button.
+     * <p>
+     * The "Send" button triggers the sendMessage method when pressed, sending the text
+     * from the input field to the controller. After sending, the input field is cleared.
+     * <p>
+     * This method encapsulates the creation and configuration of the user input components.
+     *
+     * @return A Pane containing the user input widget.
+     */
     private Pane createInputWidget() {
         final Pane input = new HBox();
         text = new TextField();
+
+        // Set an action event for the text field to handle pressing "Enter"
         text.setOnAction(e -> {
             sendMessage(text.getText());
             text.setText("");
         });
+
         final Button send = new Button("Send");
+
+        // Set an action event for the "Send" button to handle clicks
         send.setOnAction(e -> {
             sendMessage(text.getText());
             text.setText("");
         });
+
+        // Add the text field and the "Send" button to the input pane
         input.getChildren().addAll(text, send);
+
         return input;
     }
+
+
+    /**
+     * Handles the update when a new message is added.
+     * Creates a new HBox from the message payload, associates it with the message ID,
+     * and adds it to the dialog for display.
+     *
+     * @param payload The payload containing information about the new message.
+     */
+    @Override
+    public void onMessageAddUpdate(final Payload payload) {
+        HBox newHbox = createHboxFromMessage(payload.getNewMessage());
+        messageToHbox.put(payload.getNewMessage().getId(), newHbox);
+        dialog.getChildren().add(newHbox);
+    }
+
+
+    /**
+     * Handles the update when a message is deleted.
+     * Removes the corresponding HBox from the dialog based on the message ID.
+     *
+     * @param payload The payload containing information about the deleted message.
+     */
+    @Override
+    public void onDeleteUpdate(final Payload payload) {
+        int messageId = payload.getDeletedMessageId();
+        HBox toBeDeleted = messageToHbox.get(messageId);
+        dialog.getChildren().remove(toBeDeleted);
+        messageToHbox.remove(messageId);
+    }
+
+    /**
+     * Handles the update when a search operation is performed.
+     * Updates the search label with the search text and processes the search result.
+     *
+     * @param payload The payload containing search-related information.
+     */
+    @Override
+    public void onSearchUpdate(final Payload payload) {
+        searchTextLabel.setText("Searching for: " + payload.getSearchText());
+        ArrayList<Message> searchResult = payload.getSearchResult();
+        processSearchResult(searchResult);
+    }
+
+
+    /**
+     * Handles the update when the undo search operation is performed.
+     * Clears the search label and processes all messages to display them.
+     *
+     * @param payload The payload containing information about the search result.
+     */
+    @Override
+    public void onUndoSearchUpdate(final Payload payload) {
+        searchTextLabel.setText(null);
+        ArrayList<Message> allMessages = payload.getSearchResult();
+        processSearchResult(allMessages);
+    }
+
+
+    /**
+     * Creates an HBox from a message for display in the dialog.
+     *
+     * @param message The message to be displayed.
+     * @return An HBox containing the message label with appropriate styling.
+     */
+    private HBox createHboxFromMessage(final Message message) {
+        String messageText = message.getText();
+        HBox hBox = new HBox();
+        final Label label = new Label(messageText);
+
+        label.setStyle(
+                message.getSender() == Message.Sender.ELIZA
+                        ? ELIZA_STYLE : USER_STYLE
+        );
+        hBox.setAlignment(
+                message.getSender() == Message.Sender.ELIZA
+                        ? Pos.BASELINE_LEFT : Pos.BASELINE_RIGHT
+        );
+
+        hBox.getChildren().add(label);
+
+        hBox.setOnMouseClicked(e -> {
+            controller.deleteMessage(message.getId());
+        });
+        return hBox;
+    }
+
+
+    /**
+     * Processes the search result messages and displays them in the dialog.
+     * Clears the existing mapping of message IDs to HBoxes, creates new HBoxes
+     * from the search result messages, and adds them to the dialog.
+     *
+     * @param messages The list of messages resulting from a search operation.
+     */
+    private void processSearchResult(final ArrayList<Message> messages) {
+        messageToHbox.clear();
+
+        ArrayList<HBox> result = new ArrayList<>();
+        for (Message message : messages) {
+            HBox hBox = createHboxFromMessage(message);
+            result.add(hBox);
+            messageToHbox.put(message.getId(), hBox);
+        }
+
+        dialog.getChildren().clear();
+        dialog.getChildren().addAll(result);
+    }
+
 }

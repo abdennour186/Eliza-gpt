@@ -1,5 +1,7 @@
 package fr.univ_lyon1.info.m1.elizagpt;
 
+import fr.univ_lyon1.info.m1.elizagpt.controller.Controller;
+import fr.univ_lyon1.info.m1.elizagpt.model.MessageProcessor;
 import fr.univ_lyon1.info.m1.elizagpt.view.JfxView;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -14,9 +16,14 @@ public class App extends Application {
      */
     @Override
     public void start(final Stage stage) throws Exception {
-        new JfxView(stage, 600, 600);
+        //new JfxView(stage, 600, 600);
+
+
+        Controller controller = new Controller(new MessageProcessor());
+        new JfxView(stage, 600, 600, controller);
+
         // Second view (uncomment to activate)
-        // new JfxView(new Stage(), 400, 400);
+        new JfxView(new Stage(), 400, 400, controller);
     }
 
 
