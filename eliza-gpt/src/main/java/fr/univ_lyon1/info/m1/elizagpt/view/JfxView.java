@@ -1,8 +1,11 @@
 package fr.univ_lyon1.info.m1.elizagpt.view;
 
+import fr.univ_lyon1.info.m1.elizagpt.command.AddUpdate;
+import fr.univ_lyon1.info.m1.elizagpt.command.DeleteUpdate;
+import fr.univ_lyon1.info.m1.elizagpt.command.SearchUpdate;
+import fr.univ_lyon1.info.m1.elizagpt.command.Update;
 import fr.univ_lyon1.info.m1.elizagpt.controller.Controller;
 import fr.univ_lyon1.info.m1.elizagpt.model.Message;
-import fr.univ_lyon1.info.m1.elizagpt.model.Payload;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -166,58 +169,83 @@ public class JfxView implements ViewObserver {
 
     /**
      * Handles the update when a new message is added.
-     * Creates a new HBox from the message payload, associates it with the message ID,
-     * and adds it to the dialog for display.
+     * Adds the new message to the user interface.
      *
-     * @param payload The payload containing information about the new message.
+     * @param update The update object containing information about the added message.
+     * @throws IllegalArgumentException If the provided update is not of type {@link AddUpdate}.
      */
     @Override
-    public void onMessageAddUpdate(final Payload payload) {
-        HBox newHbox = createHboxFromMessage(payload.getNewMessage());
-        messageToHbox.put(payload.getNewMessage().getId(), newHbox);
-        dialog.getChildren().add(newHbox);
+    public void onMessageAddUpdate(final Update update) throws IllegalArgumentException {
+        try {
+            AddUpdate addUpdate = (AddUpdate) update;
+            HBox newHbox = createHboxFromMessage(addUpdate.getNewMessage());
+            messageToHbox.put(addUpdate.getNewMessage().getId(), newHbox);
+            dialog.getChildren().add(newHbox);
+        } catch (ClassCastException exception) {
+            throw new IllegalArgumentException("Expected AddUpdate object but found another");
+        }
     }
+
 
 
     /**
      * Handles the update when a message is deleted.
-     * Removes the corresponding HBox from the dialog based on the message ID.
+     * Removes the corresponding message from the user interface.
      *
-     * @param payload The payload containing information about the deleted message.
+     * @param update The update object containing information about the deleted message.
+     * @throws IllegalArgumentException If the provided update is not of type {@link DeleteUpdate}.
      */
     @Override
-    public void onDeleteUpdate(final Payload payload) {
-        int messageId = payload.getDeletedMessageId();
-        HBox toBeDeleted = messageToHbox.get(messageId);
-        dialog.getChildren().remove(toBeDeleted);
-        messageToHbox.remove(messageId);
+    public void onDeleteUpdate(final Update update) throws IllegalArgumentException {
+            try {
+                DeleteUpdate deleteUpdate = (DeleteUpdate) update;
+                int messageId = deleteUpdate.getDeletedMessageId();
+                HBox toBeDeleted = messageToHbox.get(messageId);
+                dialog.getChildren().remove(toBeDeleted);
+                messageToHbox.remove(messageId);
+            } catch (ClassCastException exception) {
+                throw new IllegalArgumentException("Expected DeleteUpdate object but find another");
+            }
     }
 
     /**
      * Handles the update when a search operation is performed.
      * Updates the search label with the search text and processes the search result.
      *
-     * @param payload The payload containing search-related information.
+     * @param update The update object containing search-related information.
+     * @throws IllegalArgumentException If the provided update is not of type {@link SearchUpdate}.
      */
     @Override
-    public void onSearchUpdate(final Payload payload) {
-        searchTextLabel.setText("Searching for: " + payload.getSearchText());
-        ArrayList<Message> searchResult = payload.getSearchResult();
-        processSearchResult(searchResult);
+    public void onSearchUpdate(final Update update) throws IllegalArgumentException {
+        try {
+            SearchUpdate searchUpdate = (SearchUpdate) update;
+            searchTextLabel.setText("Searching for: " + searchUpdate.getSearchText());
+            ArrayList<Message> searchResult = searchUpdate.getSearchResult();
+            processSearchResult(searchResult);
+        } catch (ClassCastException exception) {
+             throw new IllegalArgumentException("Expected SearchUpdate object but found another");
+        }
     }
 
 
     /**
-     * Handles the update when the undo search operation is performed.
-     * Clears the search label and processes all messages to display them.
+     * Handles the update when the user undoes a search operation.
+     * Restores the original list of messages in the user interface.
      *
-     * @param payload The payload containing information about the search result.
+     * @param update The update object containing information for undoing the search.
+     * @throws IllegalArgumentException If the provided update is not of type {@link SearchUpdate}.
      */
     @Override
-    public void onUndoSearchUpdate(final Payload payload) {
-        searchTextLabel.setText(null);
-        ArrayList<Message> allMessages = payload.getSearchResult();
-        processSearchResult(allMessages);
+    public void onUndoSearchUpdate(final Update update) throws IllegalArgumentException {
+            try {
+                SearchUpdate undoSearchUpdate = (SearchUpdate) update;
+                searchTextLabel.setText(null);
+                ArrayList<Message> allMessages = undoSearchUpdate.getSearchResult();
+                processSearchResult(allMessages);
+            } catch (ClassCastException exception) {
+                throw new IllegalArgumentException("Expected SearchUpdate object"
+                        + " but found another");
+            }
     }
 
 
@@ -243,9 +271,7 @@ public class JfxView implements ViewObserver {
 
         hBox.getChildren().add(label);
 
-        hBox.setOnMouseClicked(e -> {
-            controller.deleteMessage(message.getId());
-        });
+        hBox.setOnMouseClicked(e -> controller.deleteMessage(message.getId()));
         return hBox;
     }
 

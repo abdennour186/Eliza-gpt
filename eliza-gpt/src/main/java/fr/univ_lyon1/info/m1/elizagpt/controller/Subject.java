@@ -1,6 +1,6 @@
 package fr.univ_lyon1.info.m1.elizagpt.controller;
 
-import fr.univ_lyon1.info.m1.elizagpt.model.Payload;
+import fr.univ_lyon1.info.m1.elizagpt.command.Update;
 import fr.univ_lyon1.info.m1.elizagpt.view.ViewObserver;
 
 import java.util.ArrayList;
@@ -35,24 +35,26 @@ public abstract class Subject {
 
     /**
      * Notifies all registered observers of a state change
-     * based on the specified action and payload.
+     * based on the specified action and update.
+     *
      * @param action  The action that triggered the update (ADD, DELETE, SEARCH, UNDOSEARCH).
-     * @param payload The payload containing additional information about the update.
+     * @param update  The update object containing additional information about the state change.
+     * @throws IllegalArgumentException If the specified action is undefined.
      */
-    public void notifyObservers(final ACTION action, final Payload payload) {
+    public void notifyObservers(final ACTION action, final Update update) {
         observers.forEach(observer -> {
             switch (action) {
                 case ADD:
-                    observer.onMessageAddUpdate(payload);
+                    observer.onMessageAddUpdate(update);
                     break;
                 case DELETE:
-                    observer.onDeleteUpdate(payload);
+                    observer.onDeleteUpdate(update);
                     break;
                 case SEARCH:
-                    observer.onSearchUpdate(payload);
+                    observer.onSearchUpdate(update);
                     break;
                 case UNDOSEARCH:
-                    observer.onUndoSearchUpdate(payload);
+                    observer.onUndoSearchUpdate(update);
                     break;
                 default:
                     throw new IllegalArgumentException("Undefined Action");

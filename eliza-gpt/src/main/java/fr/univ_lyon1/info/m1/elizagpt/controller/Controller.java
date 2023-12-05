@@ -1,8 +1,12 @@
 package fr.univ_lyon1.info.m1.elizagpt.controller;
 
+import fr.univ_lyon1.info.m1.elizagpt.command.AddUpdate;
+import fr.univ_lyon1.info.m1.elizagpt.command.DeleteUpdate;
+import fr.univ_lyon1.info.m1.elizagpt.command.SearchUpdate;
+import fr.univ_lyon1.info.m1.elizagpt.command.Update;
 import fr.univ_lyon1.info.m1.elizagpt.model.Message;
 import fr.univ_lyon1.info.m1.elizagpt.model.MessageProcessor;
-import fr.univ_lyon1.info.m1.elizagpt.model.Payload;
+
 
 import java.util.ArrayList;
 
@@ -34,8 +38,8 @@ public class Controller extends Subject {
      */
     public void addUserMessage(final String text) {
         Message newMessage = model.addMessage(text, Message.Sender.USER);
-        Payload payload = new Payload(newMessage, -1, null, null);
-        notifyObservers(ACTION.ADD, payload);
+        Update addUpdate = new AddUpdate(newMessage);
+        notifyObservers(ACTION.ADD, addUpdate);
     }
 
     /**
@@ -45,8 +49,8 @@ public class Controller extends Subject {
      */
     public void addElizaMessage(final String text) {
         Message newMessage = model.addMessage(text, Message.Sender.ELIZA);
-        Payload payload = new Payload(newMessage, -1, null, null);
-        notifyObservers(ACTION.ADD, payload);
+        Update addUpdate = new AddUpdate(newMessage);
+        notifyObservers(ACTION.ADD, addUpdate);
     }
 
     /**
@@ -56,16 +60,16 @@ public class Controller extends Subject {
      */
     public void search(final String text) {
         ArrayList<Message> result = model.search(text);
-        Payload payload = new Payload(null, -1, result, text);
-        notifyObservers(ACTION.SEARCH, payload);
+        Update searchUpdate = new SearchUpdate(text, result);
+        notifyObservers(ACTION.SEARCH, searchUpdate);
     }
 
     /**
      * Undoes the search operation and notifies observers.
      */
     public void undoSearch() {
-        Payload payload = new Payload(null, -1, model.getMessages(), "");
-        notifyObservers(ACTION.UNDOSEARCH, payload);
+        Update undoSearchUpdate = new SearchUpdate("", model.getMessages());
+        notifyObservers(ACTION.UNDOSEARCH, undoSearchUpdate);
     }
 
     /**
@@ -75,8 +79,8 @@ public class Controller extends Subject {
      */
     public void deleteMessage(final int messageId) {
         this.model.deleteMessage(messageId);
-        Payload payload = new Payload(null, messageId, null, null);
-        notifyObservers(ACTION.DELETE, payload);
+        Update deleteUpdate = new DeleteUpdate(messageId);
+        notifyObservers(ACTION.DELETE, deleteUpdate);
     }
 
     /**

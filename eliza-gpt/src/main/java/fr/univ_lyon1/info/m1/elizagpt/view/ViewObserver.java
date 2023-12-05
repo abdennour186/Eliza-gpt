@@ -1,5 +1,6 @@
 package fr.univ_lyon1.info.m1.elizagpt.view;
-import fr.univ_lyon1.info.m1.elizagpt.model.Payload;
+import fr.univ_lyon1.info.m1.elizagpt.command.Update;
+
 
 /**
  * The {@code ViewObserver} interface defines methods to be implemented by classes
@@ -14,29 +15,30 @@ public interface ViewObserver {
      /**
       * Notifies the observer when a new message is added to the application.
       *
-      * @param payload The payload containing information about the new message.
+      * @param addUpdate The update object containing information about the added message.
       */
-     void onMessageAddUpdate(Payload payload);
+     void onMessageAddUpdate(Update addUpdate);
 
      /**
       * Notifies the observer when a message is deleted from the application.
       *
-      * @param payload The payload containing information about the deleted message.
+      * @param deleteUpdate The update object containing information about the deleted message.
       */
-     void onDeleteUpdate(Payload payload);
+     void onDeleteUpdate(Update deleteUpdate);
 
      /**
       * Notifies the observer when a search operation is performed in the application.
       *
-      * @param payload The payload containing search-related information.
+      * @param searchUpdate The update object containing search-related information.
       */
-     void onSearchUpdate(Payload payload);
+     void onSearchUpdate(Update searchUpdate);
 
      /**
       * Notifies the observer when the undo search operation is performed in the application.
       *
-      * @param payload The payload containing information about the search result.
+      * @param searchUpdate The update object containing information about the search result.
       */
-     void onUndoSearchUpdate(Payload payload);
+     void onUndoSearchUpdate(Update searchUpdate);
 }
+
 
