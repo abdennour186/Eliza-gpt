@@ -7,7 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class UserNameResponseStrategy implements ResponseStrategy{
+public class UserNameResponseStrategy extends UserNameFinder implements ResponseStrategy{
 
     @Override
     public String generateResponse(ArrayList<Message> messages, String userMessage) {
@@ -23,19 +23,5 @@ public class UserNameResponseStrategy implements ResponseStrategy{
         return null;
     }
 
-    public String getUserName(ArrayList<Message> messages) {
-        Pattern pattern = Pattern.compile("Je m'appelle (.*)\\.", Pattern.CASE_INSENSITIVE);
-        Matcher matcher;
-        ArrayList<Message> userMessages = (ArrayList<Message>) messages.stream().filter(
-                message -> message.getSender() == Message.Sender.USER
-        ).collect(Collectors.toList());
 
-        for (Message message : userMessages) {
-            matcher = pattern.matcher(message.getText());
-            if (matcher.matches()) {
-                return matcher.group(1);
-            }
-        }
-        return null;
-    }
 }

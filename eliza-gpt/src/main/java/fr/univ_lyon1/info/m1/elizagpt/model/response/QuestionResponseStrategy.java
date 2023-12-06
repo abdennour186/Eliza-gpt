@@ -7,10 +7,8 @@ import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class QuestionResponseStrategy implements ResponseStrategy {
+public class QuestionResponseStrategy extends RandomResponse implements ResponseStrategy {
 
-
-    private final Random random = new Random();
 
 
     @Override
@@ -26,7 +24,4 @@ public class QuestionResponseStrategy implements ResponseStrategy {
         return null;
     }
 
-    public <T> T pickRandom(final T[] array) {
-        return array[random.nextInt(array.length)];
-    }
 }
