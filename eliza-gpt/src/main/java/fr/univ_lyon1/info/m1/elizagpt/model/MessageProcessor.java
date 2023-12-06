@@ -25,6 +25,8 @@ public class MessageProcessor {
 
     private final MessageGenerator messageGenerator;
 
+    private final MessageSearcher messageSearcher;
+
 
     /**
      * Constructs a new MessageProcessor with an empty list of messages.
@@ -43,6 +45,8 @@ public class MessageProcessor {
                         new DefaultResponseStrategy()
                 )
         );
+
+        this.messageSearcher = new MessageSearcher();
     }
 
     /**
@@ -87,17 +91,8 @@ public class MessageProcessor {
      * @return A list of messages that contain the specified text.
      */
     public ArrayList<Message> search(final String text) {
-        ArrayList<Message> result = new ArrayList<>();
-        Pattern pattern;
-        Matcher matcher;
-        for (Message message : messages) {
-            pattern = Pattern.compile(text, Pattern.CASE_INSENSITIVE);
-            matcher = pattern.matcher(message.getText());
-            if (matcher.find()) {
-                result.add(message);
-            }
-        }
-        return result;
+        String normalizedText = normalize(text);
+        return messageSearcher.search(messages,normalizedText);
     }
 
     /**
