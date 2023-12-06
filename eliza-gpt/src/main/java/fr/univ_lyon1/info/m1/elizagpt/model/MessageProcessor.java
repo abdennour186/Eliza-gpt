@@ -2,6 +2,8 @@ package fr.univ_lyon1.info.m1.elizagpt.model;
 
 
 
+import fr.univ_lyon1.info.m1.elizagpt.model.response.*;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -30,7 +32,17 @@ public class MessageProcessor {
     public MessageProcessor() {
         this.messages = new ArrayList<>();
         this.messageManager = new MessageManager();
-        this.messageGenerator = new MessageGenerator();
+        this.messageGenerator = new MessageGenerator(
+                Arrays.asList(
+                        new NameResponseStrategy(),
+                        new UserNameResponseStrategy(),
+                        new TeacherResponseStrategy(),
+                        new VerbResponseStrategy(),
+                        new QuestionResponseStrategy(),
+                        new RandomResponseStrategy(),
+                        new DefaultResponseStrategy()
+                )
+        );
     }
 
     /**
