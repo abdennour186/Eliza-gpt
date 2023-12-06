@@ -3,11 +3,13 @@ package fr.univ_lyon1.info.m1.elizagpt.model.response;
 import fr.univ_lyon1.info.m1.elizagpt.model.Message;
 
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
 public class QuestionResponseStrategy extends RandomResponse implements ResponseStrategy {
+
+
 
 
 

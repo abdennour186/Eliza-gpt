@@ -7,7 +7,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+
 public class UserNameResponseStrategy extends UserNameFinder implements ResponseStrategy{
+
 
     @Override
     public String generateResponse(ArrayList<Message> messages, String userMessage) {
@@ -22,6 +24,5 @@ public class UserNameResponseStrategy extends UserNameFinder implements Response
         }
         return null;
     }
-
 
 }

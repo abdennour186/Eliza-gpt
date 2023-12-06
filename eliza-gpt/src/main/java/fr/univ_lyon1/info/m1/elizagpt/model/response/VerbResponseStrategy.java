@@ -10,7 +10,9 @@ import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
 public class VerbResponseStrategy extends RandomResponse implements ResponseStrategy{
+
 
     protected static final List<Verb> VERBS = Arrays.asList(
             new Verb("suis", "êtes"),
@@ -39,7 +41,6 @@ public class VerbResponseStrategy extends RandomResponse implements ResponseStra
         }
         return null;
     }
-
 
 
     public String firstToSecondPerson(final String text) {
