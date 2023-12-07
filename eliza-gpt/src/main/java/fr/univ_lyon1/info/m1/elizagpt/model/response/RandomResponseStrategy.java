@@ -5,9 +5,8 @@ import fr.univ_lyon1.info.m1.elizagpt.model.Message;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class RandomResponseStrategy implements ResponseStrategy{
+public class RandomResponseStrategy extends RandomResponse implements ResponseStrategy{
 
-    private final Random random = new Random();
     @Override
     public String generateResponse(ArrayList<Message> messages, String userMessage) {
 
