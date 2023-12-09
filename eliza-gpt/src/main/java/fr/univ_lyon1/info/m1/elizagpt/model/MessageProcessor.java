@@ -3,6 +3,8 @@ package fr.univ_lyon1.info.m1.elizagpt.model;
 
 
 import fr.univ_lyon1.info.m1.elizagpt.model.response.*;
+import fr.univ_lyon1.info.m1.elizagpt.model.search.SearchStrategy;
+import fr.univ_lyon1.info.m1.elizagpt.model.search.SubStringSearchStrategy;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,6 +13,7 @@ import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
 
 /**
  * The MessageProcessor class is responsible for processing messages in a chatbot system.
@@ -24,8 +27,8 @@ public class MessageProcessor {
     private final MessageManager messageManager;
 
     private final MessageGenerator messageGenerator;
+    private SearchStrategy searchStrategy;
 
-    private final MessageSearcher messageSearcher;
 
 
     /**
@@ -46,7 +49,8 @@ public class MessageProcessor {
                 )
         );
 
-        this.messageSearcher = new MessageSearcher();
+        this.searchStrategy = SubStringSearchStrategy.getInstance();
+
     }
 
     /**
@@ -91,8 +95,7 @@ public class MessageProcessor {
      * @return A list of messages that contain the specified text.
      */
     public ArrayList<Message> search(final String text) {
-        String normalizedText = normalize(text);
-        return messageSearcher.search(messages,normalizedText);
+        return searchStrategy.search(messages,text);
     }
 
     /**
@@ -115,7 +118,9 @@ public class MessageProcessor {
     public ArrayList<Message> getMessages() {
         return messages;
     }
-
+    public void setSearchStrategy(SearchStrategy strategy){
+        this.searchStrategy = strategy;
+    }
 
 
 

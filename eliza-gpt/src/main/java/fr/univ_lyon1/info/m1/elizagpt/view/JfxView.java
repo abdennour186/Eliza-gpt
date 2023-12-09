@@ -6,12 +6,13 @@ import fr.univ_lyon1.info.m1.elizagpt.command.SearchUpdate;
 import fr.univ_lyon1.info.m1.elizagpt.command.Update;
 import fr.univ_lyon1.info.m1.elizagpt.controller.Controller;
 import fr.univ_lyon1.info.m1.elizagpt.model.Message;
+import fr.univ_lyon1.info.m1.elizagpt.model.search.RegexSearchStrategy;
+import fr.univ_lyon1.info.m1.elizagpt.model.search.SearchStrategy;
+import fr.univ_lyon1.info.m1.elizagpt.model.search.SubStringSearchStrategy;
+import fr.univ_lyon1.info.m1.elizagpt.model.search.WordSearchStrategy;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -34,6 +35,8 @@ public class JfxView implements ViewObserver {
     private TextField searchText = null;
     private Label searchTextLabel = null;
     private final Controller controller;
+    private ComboBox<SearchStrategy> searchComboBox = null;
+
 
     private final Map<Integer, HBox> messageToHbox = new HashMap<>();
 
@@ -104,7 +107,21 @@ public class JfxView implements ViewObserver {
         secondLine.setAlignment(Pos.BASELINE_LEFT);
         searchText = new TextField();
         searchText.setOnAction(e -> searchText());
-        firstLine.getChildren().add(searchText);
+        searchComboBox = new ComboBox<>();
+        searchComboBox.getItems().addAll(
+                SubStringSearchStrategy.getInstance(),
+                RegexSearchStrategy.getInstance(),
+                WordSearchStrategy.getInstance()
+        );
+
+        searchComboBox.setOnAction(e -> {
+            SearchStrategy strategy = searchComboBox.getSelectionModel().getSelectedItem();
+            controller.setSearchStrategy(strategy);
+        });
+
+        searchComboBox.setPromptText("Select search strategy");
+        firstLine.getChildren().addAll(searchText , searchComboBox);
+
         final Button send = new Button("Search");
         send.setOnAction(e -> searchText());
         searchTextLabel = new Label();

@@ -6,6 +6,7 @@ import fr.univ_lyon1.info.m1.elizagpt.command.SearchUpdate;
 import fr.univ_lyon1.info.m1.elizagpt.command.Update;
 import fr.univ_lyon1.info.m1.elizagpt.model.Message;
 import fr.univ_lyon1.info.m1.elizagpt.model.MessageProcessor;
+import fr.univ_lyon1.info.m1.elizagpt.model.search.SearchStrategy;
 
 
 import java.util.ArrayList;
@@ -91,5 +92,8 @@ public class Controller extends Subject {
      */
     public String generateElizaResponse(final String userMessage) {
         return model.generateElizaResponse(userMessage);
+    }
+    public void setSearchStrategy(SearchStrategy strategy){
+        this.model.setSearchStrategy(strategy);
     }
 }
