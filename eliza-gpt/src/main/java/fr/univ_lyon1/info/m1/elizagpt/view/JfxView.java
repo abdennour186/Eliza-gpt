@@ -5,7 +5,7 @@ import fr.univ_lyon1.info.m1.elizagpt.command.DeleteUpdate;
 import fr.univ_lyon1.info.m1.elizagpt.command.SearchUpdate;
 import fr.univ_lyon1.info.m1.elizagpt.command.Update;
 import fr.univ_lyon1.info.m1.elizagpt.controller.Controller;
-import fr.univ_lyon1.info.m1.elizagpt.model.Message;
+import fr.univ_lyon1.info.m1.elizagpt.model.message.Message;
 import fr.univ_lyon1.info.m1.elizagpt.model.search.RegexSearchStrategy;
 import fr.univ_lyon1.info.m1.elizagpt.model.search.SearchStrategy;
 import fr.univ_lyon1.info.m1.elizagpt.model.search.SubStringSearchStrategy;

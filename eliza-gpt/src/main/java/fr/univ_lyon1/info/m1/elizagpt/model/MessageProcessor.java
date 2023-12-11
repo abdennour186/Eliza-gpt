@@ -2,17 +2,15 @@ package fr.univ_lyon1.info.m1.elizagpt.model;
 
 
 
-import fr.univ_lyon1.info.m1.elizagpt.model.response.*;
+import fr.univ_lyon1.info.m1.elizagpt.model.message.Message;
+import fr.univ_lyon1.info.m1.elizagpt.model.message.MessageManager;
+import fr.univ_lyon1.info.m1.elizagpt.model.response.ResponseGenerator;
+import fr.univ_lyon1.info.m1.elizagpt.model.response.strategies.*;
 import fr.univ_lyon1.info.m1.elizagpt.model.search.SearchStrategy;
 import fr.univ_lyon1.info.m1.elizagpt.model.search.SubStringSearchStrategy;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 
 /**
@@ -26,7 +24,7 @@ public class MessageProcessor {
     private final ArrayList<Message> messages;
     private final MessageManager messageManager;
 
-    private final MessageGenerator messageGenerator;
+    private final ResponseGenerator responseGenerator;
     private SearchStrategy searchStrategy;
 
 
@@ -37,7 +35,7 @@ public class MessageProcessor {
     public MessageProcessor() {
         this.messages = new ArrayList<>();
         this.messageManager = new MessageManager();
-        this.messageGenerator = new MessageGenerator(
+        this.responseGenerator = new ResponseGenerator(
                 Arrays.asList(
                         new NameResponseStrategy(),
                         new UserNameResponseStrategy(),
@@ -106,7 +104,7 @@ public class MessageProcessor {
      */
     public String generateElizaResponse(final String userMessage) {
         String normalizedText = normalize(userMessage);
-        return messageGenerator.generateElizaResponse(messages,normalizedText);
+        return responseGenerator.generateElizaResponse(messages,normalizedText);
     }
 
 

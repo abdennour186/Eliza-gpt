@@ -1,4 +1,4 @@
-package fr.univ_lyon1.info.m1.elizagpt.model.response;
+package fr.univ_lyon1.info.m1.elizagpt.model.response.strategies;
 
 import java.util.Random;
 

@@ -1,7 +1,8 @@
-package fr.univ_lyon1.info.m1.elizagpt.model.response;
+package fr.univ_lyon1.info.m1.elizagpt.model.response.strategies;
 
-import fr.univ_lyon1.info.m1.elizagpt.model.Message;
-import fr.univ_lyon1.info.m1.elizagpt.model.Verb;
+import fr.univ_lyon1.info.m1.elizagpt.model.message.Message;
+import fr.univ_lyon1.info.m1.elizagpt.model.verb.Verb;
+import fr.univ_lyon1.info.m1.elizagpt.model.response.ResponseStrategy;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,7 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-public class VerbResponseStrategy extends RandomResponse implements ResponseStrategy{
+public class VerbResponseStrategy extends RandomResponse implements ResponseStrategy {
 
 
     protected static final List<Verb> VERBS = Arrays.asList(

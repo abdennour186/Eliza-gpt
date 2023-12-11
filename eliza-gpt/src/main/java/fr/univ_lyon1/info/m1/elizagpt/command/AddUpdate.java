@@ -1,6 +1,6 @@
 package fr.univ_lyon1.info.m1.elizagpt.command;
 
-import fr.univ_lyon1.info.m1.elizagpt.model.Message;
+import fr.univ_lyon1.info.m1.elizagpt.model.message.Message;
 
 /**
  * Represents a specific update type for adding a new message in the ElizaGPT application.
