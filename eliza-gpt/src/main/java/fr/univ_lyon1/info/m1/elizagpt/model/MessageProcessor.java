@@ -41,7 +41,9 @@ public class MessageProcessor {
                         new UserNameResponseStrategy(),
                         new TeacherResponseStrategy(),
                         new VerbResponseStrategy(),
+                        new BestClubStrategy(),
                         new QuestionResponseStrategy(),
+                        new ByeResponseStrategy(),
                         new RandomResponseStrategy(),
                         new DefaultResponseStrategy()
                 )
