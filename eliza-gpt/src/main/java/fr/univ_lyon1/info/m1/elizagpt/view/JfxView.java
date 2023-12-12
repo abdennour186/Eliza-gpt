@@ -6,10 +6,10 @@ import fr.univ_lyon1.info.m1.elizagpt.command.SearchUpdate;
 import fr.univ_lyon1.info.m1.elizagpt.command.Update;
 import fr.univ_lyon1.info.m1.elizagpt.controller.Controller;
 import fr.univ_lyon1.info.m1.elizagpt.model.message.Message;
-import fr.univ_lyon1.info.m1.elizagpt.model.search.RegexSearchStrategy;
+import fr.univ_lyon1.info.m1.elizagpt.model.search.strategies.RegexSearchStrategy;
 import fr.univ_lyon1.info.m1.elizagpt.model.search.SearchStrategy;
-import fr.univ_lyon1.info.m1.elizagpt.model.search.SubStringSearchStrategy;
-import fr.univ_lyon1.info.m1.elizagpt.model.search.WordSearchStrategy;
+import fr.univ_lyon1.info.m1.elizagpt.model.search.strategies.SubStringSearchStrategy;
+import fr.univ_lyon1.info.m1.elizagpt.model.search.strategies.WordSearchStrategy;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -274,22 +274,30 @@ public class JfxView implements ViewObserver {
      */
     private HBox createHboxFromMessage(final Message message) {
         String messageText = message.getText();
+        HBox parentHBox = new HBox();
         HBox hBox = new HBox();
+
         final Label label = new Label(messageText);
 
-        label.setStyle(
-                message.getSender() == Message.Sender.ELIZA
-                        ? ELIZA_STYLE : USER_STYLE
-        );
-        hBox.setAlignment(
+
+        parentHBox.setAlignment(
                 message.getSender() == Message.Sender.ELIZA
                         ? Pos.BASELINE_LEFT : Pos.BASELINE_RIGHT
         );
 
-        hBox.getChildren().add(label);
+        hBox.setStyle(
+                message.getSender() == Message.Sender.ELIZA
+                        ? ELIZA_STYLE : USER_STYLE
+        );
 
-        hBox.setOnMouseClicked(e -> controller.deleteMessage(message.getId()));
-        return hBox;
+        final Button button = new Button("x");
+        button.setOnMouseClicked(e -> {
+            controller.deleteMessage(message.getId());
+        });
+        hBox.getChildren().addAll(label , button);
+        parentHBox.getChildren().add(hBox);
+
+        return parentHBox;
     }
 
 

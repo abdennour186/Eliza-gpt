@@ -1,12 +1,13 @@
-package fr.univ_lyon1.info.m1.elizagpt.model.search;
+package fr.univ_lyon1.info.m1.elizagpt.model.search.strategies;
 
 import fr.univ_lyon1.info.m1.elizagpt.model.message.Message;
+import fr.univ_lyon1.info.m1.elizagpt.model.search.SearchStrategy;
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class WordSearchStrategy implements SearchStrategy{
+public class WordSearchStrategy implements SearchStrategy {
 
     private static WordSearchStrategy instance = null;
 

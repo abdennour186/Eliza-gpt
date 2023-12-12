@@ -7,7 +7,7 @@ import fr.univ_lyon1.info.m1.elizagpt.model.message.MessageManager;
 import fr.univ_lyon1.info.m1.elizagpt.model.response.ResponseGenerator;
 import fr.univ_lyon1.info.m1.elizagpt.model.response.strategies.*;
 import fr.univ_lyon1.info.m1.elizagpt.model.search.SearchStrategy;
-import fr.univ_lyon1.info.m1.elizagpt.model.search.SubStringSearchStrategy;
+import fr.univ_lyon1.info.m1.elizagpt.model.search.strategies.SubStringSearchStrategy;
 
 import java.util.ArrayList;
 import java.util.Arrays;
