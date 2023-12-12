@@ -39,4 +39,10 @@ class CharManipulatorTest {
     {
         assertEquals("", manipulator.invertCase(""));
     }
+
+    @Test
+    void removePatternTest() {
+        assertEquals("cc", manipulator.removePattern("coucou", "ou"));
+    }
+    
 }

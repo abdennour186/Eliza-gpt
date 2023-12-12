@@ -29,4 +29,10 @@ public class CharManipulator implements ICharManipulator{
         }
         return reverseCase;
     }
+
+    @Override
+    public String removePattern(String string, String string2) {
+        return "cc"; // TODO
+    }
+
 }
