@@ -31,8 +31,16 @@ public class CharManipulator implements ICharManipulator{
     }
 
     @Override
-    public String removePattern(String string, String string2) {
-        return "cc"; // TODO
+    public String removePattern(String s, String pattern) {
+        if (s == null || pattern == null || pattern.isEmpty()) {
+            // Handle invalid input or pattern
+            return s;
+        }
+        int index;
+        while ((index = s.indexOf(pattern)) != -1) {
+            s = s.substring(0, index) + s.substring(index + pattern.length());
+        }
+        return s;
     }
 
 }
