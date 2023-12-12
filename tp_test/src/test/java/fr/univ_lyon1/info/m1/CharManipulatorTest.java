@@ -43,6 +43,8 @@ class CharManipulatorTest {
     @Test
     void removePatternTest() {
         assertEquals("cc", manipulator.removePattern("coucou", "ou"));
+        assertEquals("ab", manipulator.removePattern("aabb", "ab"));
+        assertEquals("ab", manipulator.removePattern("babaabab", "ba"));
     }
     @Test
     void removePatternTestOnEmptyString() {

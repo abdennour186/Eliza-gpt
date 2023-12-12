@@ -37,8 +37,12 @@ public class CharManipulator implements ICharManipulator{
             return s;
         }
         int index;
-        while ((index = s.indexOf(pattern)) != -1) {
-            s = s.substring(0, index) + s.substring(index + pattern.length());
+        for (int i=0; i< (s.length()-pattern.length()+1); i++)
+        {
+            if(s.substring(i, i + pattern.length()).equals(pattern)){
+                s = s.substring(0, i) + s.substring(i + pattern.length());
+                i--;
+            }
         }
         return s;
     }
