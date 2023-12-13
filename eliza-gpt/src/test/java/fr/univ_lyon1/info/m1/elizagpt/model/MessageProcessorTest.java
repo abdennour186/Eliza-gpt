@@ -15,8 +15,6 @@ import static org.mockito.Mockito.*;
 import java.util.ArrayList;
 
 import org.mockito.Mock;
-import org.mockito.Mockito;
-
 /**
  * Tests for MessageProcessor.
  */
