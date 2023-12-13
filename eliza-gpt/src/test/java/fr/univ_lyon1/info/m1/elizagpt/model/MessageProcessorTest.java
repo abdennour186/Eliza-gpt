@@ -8,8 +8,6 @@ import org.junit.jupiter.api.Test;
 import fr.univ_lyon1.info.m1.elizagpt.model.message.MessageManager;
 
 
-import static org.hamcrest.Matchers.*;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 import java.util.ArrayList;
