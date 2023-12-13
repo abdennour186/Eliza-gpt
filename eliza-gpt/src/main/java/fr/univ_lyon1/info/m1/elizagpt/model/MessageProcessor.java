@@ -52,6 +52,12 @@ public class MessageProcessor {
         this.searchStrategy = SubStringSearchStrategy.getInstance();
 
     }
+    public MessageProcessor(MessageManager messManage, SearchStrategy searchStrategy, ResponseGenerator response, ArrayList<Message> messages) {
+        this.messages = messages;
+        this.messageManager = messManage;
+        this.responseGenerator = response;
+        this.searchStrategy = searchStrategy;
+    }
 
     /**
      * Normalizes the given text by trimming, removing extra spaces, and ensuring punctuation.
