@@ -8,14 +8,14 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class RegexSearchStrategyTest {
+class SubStringSearchStrategyTest {
 
-    RegexSearchStrategy regexSearchStrategy;
+    SubStringSearchStrategy subStringSearchStrategy;
     ArrayList<Message> messages;
 
     @BeforeEach
     public void setUp() {
-        regexSearchStrategy = RegexSearchStrategy.getInstance();
+        subStringSearchStrategy = subStringSearchStrategy.getInstance();
         messages = new ArrayList<>();
         messages.add(new Message("Hello, how are you?", Message.Sender.USER));
         messages.add(new Message("I'm doing well, thank you!", Message.Sender.ELIZA));
@@ -25,13 +25,13 @@ class RegexSearchStrategyTest {
     @Test
     void search() {
         // Test for a matching pattern
-        String searchReg = "ho.*";
-        ArrayList<Message> result = regexSearchStrategy.search(messages, searchReg);
+        String subtext = "we";
+        ArrayList<Message> result = subStringSearchStrategy.search(messages, subtext);
         assertEquals(1, result.size());
-        assertEquals("Hello, how are you?", result.get(0).getText());
+        assertEquals("I'm doing well, thank you!", result.get(0).getText());
 
-        searchReg = "fr+";
-        result = regexSearchStrategy.search(messages, searchReg);
+        subtext = "ho.*";
+        result = subStringSearchStrategy.search(messages, subtext);
         assertEquals(0, result.size());
     }
 
