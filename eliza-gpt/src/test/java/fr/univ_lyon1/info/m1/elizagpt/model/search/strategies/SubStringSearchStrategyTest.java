@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -15,7 +16,7 @@ class SubStringSearchStrategyTest {
 
     @BeforeEach
     public void setUp() {
-        subStringSearchStrategy = subStringSearchStrategy.getInstance();
+        subStringSearchStrategy = SubStringSearchStrategy.getInstance();
         messages = new ArrayList<>();
         messages.add(new Message("Hello, how are you?", Message.Sender.USER));
         messages.add(new Message("I'm doing well, thank you!", Message.Sender.ELIZA));
@@ -26,7 +27,7 @@ class SubStringSearchStrategyTest {
     void search() {
         // Test for a matching pattern
         String subtext = "we";
-        ArrayList<Message> result = subStringSearchStrategy.search(messages, subtext);
+        List<Message> result = subStringSearchStrategy.search(messages, subtext);
         assertEquals(1, result.size());
         assertEquals("I'm doing well, thank you!", result.get(0).getText());
 

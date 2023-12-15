@@ -11,6 +11,7 @@ import fr.univ_lyon1.info.m1.elizagpt.model.message.MessageManager;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.mockito.Mock;
 /**
@@ -18,7 +19,7 @@ import org.mockito.Mock;
  */
 public class MessageProcessorTest {
 
-    MessageProcessor Messpro;
+    MessageProcessor messageProcessor;
     @Mock
     MessageManager messageManagerMock;
     @Mock
@@ -35,22 +36,22 @@ public class MessageProcessorTest {
         Messages.add(new Message("a test text !", Message.Sender.USER));
         Messages.add(new Message("a new test text !", Message.Sender.ELIZA));
         Messages.add(new Message("another one !", Message.Sender.ELIZA));
-        Messpro = new MessageProcessor(messageManagerMock, searchStrategyMock, responseGeneratorMock, Messages);
+        messageProcessor = new MessageProcessor(messageManagerMock, searchStrategyMock, responseGeneratorMock, Messages);
     }
 
     @Test
     void normalize() {
         String original = "test       text     !";
         String expected = "test text !";
-        assertEquals(expected, Messpro.normalize(original));
+        assertEquals(expected, messageProcessor.normalize(original));
 
         String original2 = "      another   test       text     .   ";
         String expected2 = "another test text .";
-        assertEquals(expected2, Messpro.normalize(original2));
+        assertEquals(expected2, messageProcessor.normalize(original2));
 
         String original3 = "  aaand    another   test       text     ,   ";
         String expected3 = "aaand another test text ,.";
-        assertEquals(expected3, Messpro.normalize(original3));
+        assertEquals(expected3, messageProcessor.normalize(original3));
     }
 
     @Test
@@ -61,10 +62,10 @@ public class MessageProcessorTest {
         Message.Sender sender = Message.Sender.USER;
         Message expectedMessage = new Message(normalizedInput, sender);
 
-        when(messageManagerMock.addMessage(any(), eq(normalizedInput), eq(sender))).thenReturn(expectedMessage);
+        when(messageManagerMock.addMessage(eq(normalizedInput), eq(sender))).thenReturn(expectedMessage);
 
         // Act
-        Message result = Messpro.addMessage(input, sender);
+        Message result = messageProcessor.addMessage(input, sender);
 
         // Assert
         assertEquals(expectedMessage.getText(), result.getText());
@@ -77,8 +78,8 @@ public class MessageProcessorTest {
         expectedList.add(new Message("a test text !", Message.Sender.USER));
         expectedList.add(new Message("a new test text !", Message.Sender.ELIZA));
         int messageId = 2;
-        Messpro.deleteMessage(messageId);
-        verify(messageManagerMock).deleteMessage(Messages, messageId);
+        messageProcessor.deleteMessage(messageId);
+        verify(messageManagerMock).deleteMessage(messageId);
     }
 
     @Test
@@ -89,7 +90,7 @@ public class MessageProcessorTest {
         expectedList.add(new Message(ToSearch, any()));
 
         when(searchStrategyMock.search(Messages, eq(ToSearch))).thenReturn(expectedList);
-        ArrayList<Message> result = Messpro.search(ToSearch);
+        List<Message> result = messageProcessor.search(ToSearch);
 
         verify(searchStrategyMock).search(any(), eq(ToSearch));
 
@@ -100,18 +101,18 @@ public class MessageProcessorTest {
     @Test
     void generateElizaResponse() {
         String input = "  Quelle  est la   meilleure  équipe  du  foot \\?  ";
-        String normalizedInput = Messpro.normalize(input);
+        String normalizedInput = messageProcessor.normalize(input);
         String expectedString = "Bien sûr c'est le Real Madrid !";
 
-        when(responseGeneratorMock.generateElizaResponse(Messages, normalizedInput)).thenReturn(expectedString);
-        String result = Messpro.generateElizaResponse(input);
-        verify(responseGeneratorMock).generateElizaResponse(any(), eq(normalizedInput));
+        when(responseGeneratorMock.generateElizaResponse(normalizedInput)).thenReturn(expectedString);
+        String result = messageProcessor.generateElizaResponse(input);
+        verify(responseGeneratorMock).generateElizaResponse(eq(normalizedInput));
         assertEquals(expectedString, result);
     }
 
     @Test
     void getMessages() {
-        ArrayList<Message> result = Messpro.getMessages();
+        List<Message> result = messageProcessor.getMessages();
         assertEquals(Messages, result);
     }
 }

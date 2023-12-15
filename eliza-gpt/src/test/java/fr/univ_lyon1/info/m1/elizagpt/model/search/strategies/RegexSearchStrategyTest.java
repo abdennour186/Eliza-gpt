@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -26,7 +27,7 @@ class RegexSearchStrategyTest {
     void search() {
         // Test for a matching pattern
         String searchReg = "ho.*";
-        ArrayList<Message> result = regexSearchStrategy.search(messages, searchReg);
+        List<Message> result = regexSearchStrategy.search(messages, searchReg);
         assertEquals(1, result.size());
         assertEquals("Hello, how are you?", result.get(0).getText());
 

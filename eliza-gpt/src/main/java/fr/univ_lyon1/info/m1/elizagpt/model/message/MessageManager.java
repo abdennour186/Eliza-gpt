@@ -1,8 +1,5 @@
 package fr.univ_lyon1.info.m1.elizagpt.model.message;
 
-import fr.univ_lyon1.info.m1.elizagpt.model.message.Message;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class MessageManager {

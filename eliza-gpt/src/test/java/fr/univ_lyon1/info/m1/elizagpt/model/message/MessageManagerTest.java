@@ -9,41 +9,41 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 class MessageManagerTest {
-    ArrayList<Message> Messages;
-    MessageManager Messmana;
+    ArrayList<Message> messages;
+    MessageManager messageManager;
     @BeforeEach
     public void setUp(){
-        Messages = new ArrayList<>();
-        Messages.add(new Message("a test text !", Message.Sender.USER));
-        Messages.add(new Message("a new test text !", Message.Sender.ELIZA));
-        Messages.add(new Message("another one !", Message.Sender.ELIZA));
-        Messmana = new MessageManager();
+        messages = new ArrayList<>();
+        messages.add(new Message("a test text !", Message.Sender.USER));
+        messages.add(new Message("a new test text !", Message.Sender.ELIZA));
+        messages.add(new Message("another one !", Message.Sender.ELIZA));
+        messageManager = new MessageManager(messages);
     }
 
     @Test
     void addMessage() {
         Message.Sender newMessageSender = Message.Sender.USER;
         String newMessageText = "new message text";
-        int old_size = Messages.size();
-        Message result = Messmana.addMessage(Messages, newMessageText, newMessageSender);
-        int new_size = Messages.size();
+        int oldSize = messages.size();
+        Message result = messageManager.addMessage(newMessageText, newMessageSender);
+        int newSize = messages.size();
 
 
 
-        assertEquals(old_size+1, new_size);
+        assertEquals(oldSize+1, newSize);
         assertEquals(result.getText(), newMessageText);
         assertEquals(result.getSender(), newMessageSender);
-        assertEquals(Messages.get(Messages.size()-1).getText(), newMessageText);
+        assertEquals(messages.get(messages.size()-1).getText(), newMessageText);
     }
 
     @Test
     void deleteMessage() {
-        int MessageId = 5;
+        int MessageId = messages.get(0).getId();
 
-        int old_size = Messages.size();
-        Messmana.deleteMessage(Messages, MessageId);
-        int new_size = Messages.size();
-        assertEquals(old_size-1, new_size);
-        assertEquals(Messages.get(1).getText(), "another one !");
+        int oldSize = messages.size();
+        messageManager.deleteMessage(MessageId);
+        int newSize = messages.size();
+        assertEquals(oldSize-1, newSize);
+        assertEquals(messages.get(1).getText(), "another one !");
     }
 }
