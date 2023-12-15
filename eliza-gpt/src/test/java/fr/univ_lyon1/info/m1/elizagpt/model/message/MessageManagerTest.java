@@ -38,12 +38,11 @@ class MessageManagerTest {
 
     @Test
     void deleteMessage() {
-        int MessageId = 1;
+        int MessageId = 5;
 
         int old_size = Messages.size();
         Messmana.deleteMessage(Messages, MessageId);
         int new_size = Messages.size();
-
         assertEquals(old_size-1, new_size);
         assertEquals(Messages.get(1).getText(), "another one !");
     }
