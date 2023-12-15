@@ -1,8 +1,8 @@
-package fr.univ_lyon1.info.m1.elizagpt.command;
+package fr.univ_lyon1.info.m1.elizagpt.model.payload;
 
 import fr.univ_lyon1.info.m1.elizagpt.model.message.Message;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Represents a specific update type for searching messages in the ElizaGPT application.
@@ -17,12 +17,12 @@ import java.util.ArrayList;
  * such as the {@link fr.univ_lyon1.info.m1.elizagpt.controller.Controller}, to communicate and
  * execute search-related updates.</p>
  *
- * @see fr.univ_lyon1.info.m1.elizagpt.command.Update
+ * @see Update
  * @see fr.univ_lyon1.info.m1.elizagpt.controller.Controller
  */
 public class SearchUpdate extends Update {
     private final String searchText;
-    private final ArrayList<Message> searchResult;
+    private final List<Message> searchResult;
 
     /**
      * Constructs a new SearchUpdate instance with the specified search text and search result.
@@ -30,7 +30,7 @@ public class SearchUpdate extends Update {
      * @param searchText The text used for searching messages.
      * @param searchResult The list of messages matching the search criteria.
      */
-    public SearchUpdate(final String searchText, final ArrayList<Message> searchResult) {
+    public SearchUpdate(final String searchText, final List<Message> searchResult) {
         this.searchText = searchText;
         this.searchResult = searchResult;
     }
@@ -49,7 +49,7 @@ public class SearchUpdate extends Update {
      *
      * @return The search result, represented as an ArrayList of Message objects.
      */
-    public ArrayList<Message> getSearchResult() {
+    public List<Message> getSearchResult() {
         return searchResult;
     }
 }

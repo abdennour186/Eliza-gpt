@@ -18,4 +18,11 @@ public class Verb {
         return secondPlural;
     }
 
+    @Override
+    public String toString() {
+        return "Verb{" +
+                "firstSingular='" + firstSingular + '\'' +
+                ", secondPlural='" + secondPlural + '\'' +
+                '}';
+    }
 }

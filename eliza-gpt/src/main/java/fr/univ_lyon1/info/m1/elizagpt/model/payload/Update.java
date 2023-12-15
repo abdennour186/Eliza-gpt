@@ -1,4 +1,4 @@
-package fr.univ_lyon1.info.m1.elizagpt.command;
+package fr.univ_lyon1.info.m1.elizagpt.model.payload;
 
 /**
  * The abstract base class for update types in the ElizaGPT application.
@@ -10,9 +10,9 @@ package fr.univ_lyon1.info.m1.elizagpt.command;
  *
  * <p>Subclasses should provide specific behavior by implementing their own execution logic.</p>
  *
- * @see fr.univ_lyon1.info.m1.elizagpt.command.AddUpdate
- * @see fr.univ_lyon1.info.m1.elizagpt.command.DeleteUpdate
- * @see fr.univ_lyon1.info.m1.elizagpt.command.SearchUpdate
+ * @see AddUpdate
+ * @see DeleteUpdate
+ * @see SearchUpdate
  * @version 1.0
  */
 public abstract class Update {

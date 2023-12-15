@@ -4,13 +4,14 @@ import fr.univ_lyon1.info.m1.elizagpt.model.message.Message;
 import fr.univ_lyon1.info.m1.elizagpt.model.search.SearchStrategy;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class SubStringSearchStrategy implements SearchStrategy {
 
     private static SubStringSearchStrategy instance = null;
     @Override
-    public ArrayList<Message> search(ArrayList<Message> messages, String text) {
+    public List<Message> search(List<Message> messages, String text) {
         ArrayList<Message> filteredMessages = new ArrayList<>();
         for (Message message : messages) {
             if (message.getText().toLowerCase().contains(text.toLowerCase())) {

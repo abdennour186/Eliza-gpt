@@ -1,4 +1,4 @@
-package fr.univ_lyon1.info.m1.elizagpt.command;
+package fr.univ_lyon1.info.m1.elizagpt.model.payload;
 
 import fr.univ_lyon1.info.m1.elizagpt.model.message.Message;
 
@@ -15,7 +15,7 @@ import fr.univ_lyon1.info.m1.elizagpt.model.message.Message;
  * such as the {@link fr.univ_lyon1.info.m1.elizagpt.controller.Controller}, to communicate and
  * execute add-related updates.</p>
  *
- * @see fr.univ_lyon1.info.m1.elizagpt.command.Update
+ * @see Update
  * @see fr.univ_lyon1.info.m1.elizagpt.controller.Controller
  */
 public class AddUpdate extends Update {

@@ -4,6 +4,7 @@ import fr.univ_lyon1.info.m1.elizagpt.model.message.Message;
 import fr.univ_lyon1.info.m1.elizagpt.model.search.SearchStrategy;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,7 +13,7 @@ public class WordSearchStrategy implements SearchStrategy {
     private static WordSearchStrategy instance = null;
 
     @Override
-    public ArrayList<Message> search(ArrayList<Message> messages, String text) {
+    public List<Message> search(List<Message> messages, String text) {
         ArrayList<Message> filteredMessages = new ArrayList<>();
         Pattern pattern = Pattern.compile(".*\\b" + text + "\\b.*", Pattern.CASE_INSENSITIVE);
         for (Message message : messages) {
