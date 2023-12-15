@@ -1,5 +1,5 @@
 package fr.univ_lyon1.info.m1.elizagpt.view;
-import fr.univ_lyon1.info.m1.elizagpt.payload.Update;
+import fr.univ_lyon1.info.m1.elizagpt.model.payload.Update;
 
 
 /**
@@ -10,7 +10,7 @@ import fr.univ_lyon1.info.m1.elizagpt.payload.Update;
  * Classes implementing this interface should handle updates received through the
  * specified methods to maintain synchronization with the application's model.
  */
-public interface ViewObserver {
+public interface Observer {
 
      /**
       * Notifies the observer when a new message is added to the application.

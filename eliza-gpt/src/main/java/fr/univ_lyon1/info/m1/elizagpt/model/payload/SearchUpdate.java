@@ -1,8 +1,7 @@
-package fr.univ_lyon1.info.m1.elizagpt.payload;
+package fr.univ_lyon1.info.m1.elizagpt.model.payload;
 
 import fr.univ_lyon1.info.m1.elizagpt.model.message.Message;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,7 +17,7 @@ import java.util.List;
  * such as the {@link fr.univ_lyon1.info.m1.elizagpt.controller.Controller}, to communicate and
  * execute search-related updates.</p>
  *
- * @see fr.univ_lyon1.info.m1.elizagpt.payload.Update
+ * @see Update
  * @see fr.univ_lyon1.info.m1.elizagpt.controller.Controller
  */
 public class SearchUpdate extends Update {

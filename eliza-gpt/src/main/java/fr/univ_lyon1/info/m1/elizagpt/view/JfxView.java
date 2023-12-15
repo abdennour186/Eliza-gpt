@@ -1,15 +1,12 @@
 package fr.univ_lyon1.info.m1.elizagpt.view;
 
-import fr.univ_lyon1.info.m1.elizagpt.payload.AddUpdate;
-import fr.univ_lyon1.info.m1.elizagpt.payload.DeleteUpdate;
-import fr.univ_lyon1.info.m1.elizagpt.payload.SearchUpdate;
-import fr.univ_lyon1.info.m1.elizagpt.payload.Update;
+import fr.univ_lyon1.info.m1.elizagpt.model.payload.AddUpdate;
+import fr.univ_lyon1.info.m1.elizagpt.model.payload.DeleteUpdate;
+import fr.univ_lyon1.info.m1.elizagpt.model.payload.SearchUpdate;
+import fr.univ_lyon1.info.m1.elizagpt.model.payload.Update;
 import fr.univ_lyon1.info.m1.elizagpt.controller.Controller;
 import fr.univ_lyon1.info.m1.elizagpt.model.message.Message;
-import fr.univ_lyon1.info.m1.elizagpt.model.search.strategies.RegexSearchStrategy;
 import fr.univ_lyon1.info.m1.elizagpt.model.search.SearchStrategy;
-import fr.univ_lyon1.info.m1.elizagpt.model.search.strategies.SubStringSearchStrategy;
-import fr.univ_lyon1.info.m1.elizagpt.model.search.strategies.WordSearchStrategy;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -30,7 +27,7 @@ import java.util.Map;
  * It provides a chat-like interface where users
  * can interact with Eliza and view messages.
  */
-public class JfxView implements ViewObserver {
+public class JfxView implements Observer {
     private final VBox dialog;
     private TextField text = null;
     private TextField searchText = null;
@@ -109,17 +106,11 @@ public class JfxView implements ViewObserver {
         searchText = new TextField();
         searchText.setOnAction(e -> searchText());
         searchComboBox = new ComboBox<>();
-        searchComboBox.getItems().addAll(
-                SubStringSearchStrategy.getInstance(),
-                RegexSearchStrategy.getInstance(),
-                WordSearchStrategy.getInstance()
-        );
-
+        searchComboBox.getItems().addAll(controller.getSearchStrategies());
         searchComboBox.setOnAction(e -> {
             SearchStrategy strategy = searchComboBox.getSelectionModel().getSelectedItem();
             controller.setSearchStrategy(strategy);
         });
-
         searchComboBox.setPromptText("Select search strategy");
         firstLine.getChildren().addAll(searchText , searchComboBox);
 

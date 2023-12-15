@@ -1,15 +1,18 @@
 package fr.univ_lyon1.info.m1.elizagpt.controller;
 
-import fr.univ_lyon1.info.m1.elizagpt.payload.AddUpdate;
-import fr.univ_lyon1.info.m1.elizagpt.payload.DeleteUpdate;
-import fr.univ_lyon1.info.m1.elizagpt.payload.SearchUpdate;
-import fr.univ_lyon1.info.m1.elizagpt.payload.Update;
+import fr.univ_lyon1.info.m1.elizagpt.model.search.strategies.RegexSearchStrategy;
+import fr.univ_lyon1.info.m1.elizagpt.model.search.strategies.SubStringSearchStrategy;
+import fr.univ_lyon1.info.m1.elizagpt.model.search.strategies.WordSearchStrategy;
+import fr.univ_lyon1.info.m1.elizagpt.model.payload.AddUpdate;
+import fr.univ_lyon1.info.m1.elizagpt.model.payload.DeleteUpdate;
+import fr.univ_lyon1.info.m1.elizagpt.model.payload.SearchUpdate;
+import fr.univ_lyon1.info.m1.elizagpt.model.payload.Update;
 import fr.univ_lyon1.info.m1.elizagpt.model.message.Message;
 import fr.univ_lyon1.info.m1.elizagpt.model.MessageProcessor;
 import fr.univ_lyon1.info.m1.elizagpt.model.search.SearchStrategy;
 
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -97,5 +100,13 @@ public class Controller extends Subject {
     }
     public void setSearchStrategy(SearchStrategy strategy){
         this.model.setSearchStrategy(strategy);
+    }
+
+    public List<SearchStrategy> getSearchStrategies(){
+        return Arrays.asList(
+                SubStringSearchStrategy.getInstance(),
+                RegexSearchStrategy.getInstance(),
+                WordSearchStrategy.getInstance()
+        );
     }
 }

@@ -13,7 +13,20 @@ public class VerbManager {
     private final List<Verb> verbs;
     private VerbManager(String filePath) {
         this.verbs = new ArrayList<>();
+        this.loadVerbsFromFile(filePath);
+    }
 
+    public static VerbManager getInstance(String filePath) {
+        if(instance == null)
+            instance = new VerbManager(filePath);
+        return instance;
+    }
+
+    public List<Verb> getVerbs() {
+        return verbs;
+    }
+
+    private void loadVerbsFromFile(String filePath){
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
 
@@ -41,16 +54,5 @@ public class VerbManager {
         } catch (IOException e) {
             System.out.println("something went wrong !");
         }
-
-    }
-
-    public static VerbManager getInstance(String filePath) {
-        if(instance == null)
-            instance = new VerbManager(filePath);
-        return instance;
-    }
-
-    public List<Verb> getVerbs() {
-        return verbs;
     }
 }
