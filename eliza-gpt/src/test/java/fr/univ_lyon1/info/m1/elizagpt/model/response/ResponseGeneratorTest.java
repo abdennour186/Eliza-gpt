@@ -37,6 +37,7 @@ class ResponseGeneratorTest {
     void GenerateElizaResponse() {
         String usermessage = "Au revoir.";
         String expectedRes = "Oh non, c'est trop triste de se quitter !";
+
         when(strategiesMock.get(0).generateResponse(Messages, usermessage)).thenReturn(null);
         when(strategiesMock.get(1).generateResponse(Messages, usermessage)).thenReturn(expectedRes);
 
