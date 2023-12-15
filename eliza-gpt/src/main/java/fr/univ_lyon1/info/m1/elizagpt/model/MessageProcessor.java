@@ -5,12 +5,13 @@ package fr.univ_lyon1.info.m1.elizagpt.model;
 import fr.univ_lyon1.info.m1.elizagpt.model.message.Message;
 import fr.univ_lyon1.info.m1.elizagpt.model.message.MessageManager;
 import fr.univ_lyon1.info.m1.elizagpt.model.response.ResponseGenerator;
-import fr.univ_lyon1.info.m1.elizagpt.model.response.strategies.*;
+import fr.univ_lyon1.info.m1.elizagpt.model.response.handlers.*;
 import fr.univ_lyon1.info.m1.elizagpt.model.search.SearchStrategy;
 import fr.univ_lyon1.info.m1.elizagpt.model.search.strategies.SubStringSearchStrategy;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -19,13 +20,15 @@ import java.util.Arrays;
  * searching for messages, generating responses, and more. This class acts as a core component
  * in managing and interpreting user interactions.
  */
-public class MessageProcessor {
+public class MessageProcessor implements UserName{
 
-    private final ArrayList<Message> messages;
+    private final List<Message> messages;
     private final MessageManager messageManager;
 
     private final ResponseGenerator responseGenerator;
     private SearchStrategy searchStrategy;
+
+    private String userName;
 
 
 
@@ -34,21 +37,21 @@ public class MessageProcessor {
      */
     public MessageProcessor() {
         this.messages = new ArrayList<>();
-        this.messageManager = new MessageManager();
+        this.messageManager = new MessageManager(this.messages);
         this.responseGenerator = new ResponseGenerator(
                 Arrays.asList(
-                        new NameResponseStrategy(),
-                        new UserNameResponseStrategy(),
-                        new TeacherResponseStrategy(),
-                        new VerbResponseStrategy(),
-                        new BestClubStrategy(),
-                        new QuestionResponseStrategy(),
-                        new ByeResponseStrategy(),
-                        new RandomResponseStrategy(),
-                        new DefaultResponseStrategy()
+                        new NameResponseHandler(this),
+                        new UserNameResponseHandler(this),
+                        new TeacherResponseHandler(),
+                        new VerbResponseHandler(),
+                        new BestClubHandler(),
+                        new QuestionResponseHandler(),
+                        new ByeResponseHandler(this),
+                        new RandomResponseHandler(),
+                        new DefaultResponseHandler(this)
                 )
         );
-
+        this.addMessage("Bonjour" , Message.Sender.ELIZA);
         this.searchStrategy = SubStringSearchStrategy.getInstance();
 
     }
@@ -77,7 +80,7 @@ public class MessageProcessor {
      */
     public Message addMessage(final String text, final Message.Sender sender) {
         String normalizedText = normalize(text);
-        return this.messageManager.addMessage(messages , normalizedText , sender);
+        return this.messageManager.addMessage(normalizedText , sender);
     }
 
     /**
@@ -86,7 +89,7 @@ public class MessageProcessor {
      * @param messageId The ID of the message to be deleted.
      */
     public void deleteMessage(final int messageId) {
-        this.messageManager.deleteMessage(messages , messageId);
+        this.messageManager.deleteMessage(messageId);
     }
     /**
      * Searches for messages containing the specified text.
@@ -94,7 +97,7 @@ public class MessageProcessor {
      * @param text The text to search for within messages.
      * @return A list of messages that contain the specified text.
      */
-    public ArrayList<Message> search(final String text) {
+    public List<Message> search(final String text) {
         return searchStrategy.search(messages,text);
     }
 
@@ -106,7 +109,7 @@ public class MessageProcessor {
      */
     public String generateElizaResponse(final String userMessage) {
         String normalizedText = normalize(userMessage);
-        return responseGenerator.generateElizaResponse(messages,normalizedText);
+        return responseGenerator.generateElizaResponse(normalizedText);
     }
 
 
@@ -115,13 +118,20 @@ public class MessageProcessor {
      *
      * @return The list of messages.
      */
-    public ArrayList<Message> getMessages() {
+    public List<Message> getMessages() {
         return messages;
     }
     public void setSearchStrategy(SearchStrategy strategy){
         this.searchStrategy = strategy;
     }
 
+    @Override
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
-
+    @Override
+    public String getUserName() {
+        return this.userName;
+    }
 }

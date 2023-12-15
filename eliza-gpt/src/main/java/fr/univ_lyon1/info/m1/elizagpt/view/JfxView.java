@@ -1,9 +1,9 @@
 package fr.univ_lyon1.info.m1.elizagpt.view;
 
-import fr.univ_lyon1.info.m1.elizagpt.command.AddUpdate;
-import fr.univ_lyon1.info.m1.elizagpt.command.DeleteUpdate;
-import fr.univ_lyon1.info.m1.elizagpt.command.SearchUpdate;
-import fr.univ_lyon1.info.m1.elizagpt.command.Update;
+import fr.univ_lyon1.info.m1.elizagpt.payload.AddUpdate;
+import fr.univ_lyon1.info.m1.elizagpt.payload.DeleteUpdate;
+import fr.univ_lyon1.info.m1.elizagpt.payload.SearchUpdate;
+import fr.univ_lyon1.info.m1.elizagpt.payload.Update;
 import fr.univ_lyon1.info.m1.elizagpt.controller.Controller;
 import fr.univ_lyon1.info.m1.elizagpt.model.message.Message;
 import fr.univ_lyon1.info.m1.elizagpt.model.search.strategies.RegexSearchStrategy;
@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -70,7 +71,7 @@ public class JfxView implements ViewObserver {
 
         final Pane input = createInputWidget();
         root.getChildren().add(input);
-
+        controller.undoSearch();
         // Everything's ready: add it to the scene and display it
         final Scene scene = new Scene(root, width, height);
         stage.setScene(scene);
@@ -237,7 +238,7 @@ public class JfxView implements ViewObserver {
         try {
             SearchUpdate searchUpdate = (SearchUpdate) update;
             searchTextLabel.setText("Searching for: " + searchUpdate.getSearchText());
-            ArrayList<Message> searchResult = searchUpdate.getSearchResult();
+            List<Message> searchResult = searchUpdate.getSearchResult();
             processSearchResult(searchResult);
         } catch (ClassCastException exception) {
              throw new IllegalArgumentException("Expected SearchUpdate object but found another");
@@ -257,7 +258,7 @@ public class JfxView implements ViewObserver {
             try {
                 SearchUpdate undoSearchUpdate = (SearchUpdate) update;
                 searchTextLabel.setText(null);
-                ArrayList<Message> allMessages = undoSearchUpdate.getSearchResult();
+                List<Message> allMessages = undoSearchUpdate.getSearchResult();
                 processSearchResult(allMessages);
             } catch (ClassCastException exception) {
                 throw new IllegalArgumentException("Expected SearchUpdate object"
@@ -308,7 +309,7 @@ public class JfxView implements ViewObserver {
      *
      * @param messages The list of messages resulting from a search operation.
      */
-    private void processSearchResult(final ArrayList<Message> messages) {
+    private void processSearchResult(final List<Message> messages) {
         messageToHbox.clear();
 
         ArrayList<HBox> result = new ArrayList<>();

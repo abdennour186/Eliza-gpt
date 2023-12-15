@@ -1,15 +1,17 @@
 package fr.univ_lyon1.info.m1.elizagpt.controller;
 
-import fr.univ_lyon1.info.m1.elizagpt.command.AddUpdate;
-import fr.univ_lyon1.info.m1.elizagpt.command.DeleteUpdate;
-import fr.univ_lyon1.info.m1.elizagpt.command.SearchUpdate;
-import fr.univ_lyon1.info.m1.elizagpt.command.Update;
+import fr.univ_lyon1.info.m1.elizagpt.payload.AddUpdate;
+import fr.univ_lyon1.info.m1.elizagpt.payload.DeleteUpdate;
+import fr.univ_lyon1.info.m1.elizagpt.payload.SearchUpdate;
+import fr.univ_lyon1.info.m1.elizagpt.payload.Update;
 import fr.univ_lyon1.info.m1.elizagpt.model.message.Message;
 import fr.univ_lyon1.info.m1.elizagpt.model.MessageProcessor;
 import fr.univ_lyon1.info.m1.elizagpt.model.search.SearchStrategy;
 
 
 import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * The Controller class serves as the controller in the MVC (Model-View-Controller) architecture.
@@ -60,7 +62,7 @@ public class Controller extends Subject {
      * @param text The text to search for in messages.
      */
     public void search(final String text) {
-        ArrayList<Message> result = model.search(text);
+        List<Message> result = model.search(text);
         Update searchUpdate = new SearchUpdate(text, result);
         notifyObservers(ACTION.SEARCH, searchUpdate);
     }

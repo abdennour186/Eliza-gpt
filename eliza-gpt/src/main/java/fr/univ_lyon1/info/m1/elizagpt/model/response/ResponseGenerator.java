@@ -11,21 +11,18 @@ import java.util.List;
 public class ResponseGenerator {
 
 
-    private final List<ResponseStrategy> strategies;
+    private final List<ResponseHandler> handlers;
 
 
-    public ResponseGenerator(List<ResponseStrategy> strategies){
-        this.strategies = strategies;
+    public ResponseGenerator(List<ResponseHandler> handlers){
+        this.handlers = handlers;
+        for(int i = 0;i < handlers.size() - 1;i++)
+            handlers.get(i).setNextHandler(handlers.get(i+1));
     }
 
 
-    public String generateElizaResponse(final ArrayList<Message> messages, final String userMessage) {
-        for(ResponseStrategy strategy : strategies){
-            String response = strategy.generateResponse(messages,userMessage);
-            if(response != null)
-                return response;
-        }
-        return null;
+    public String generateElizaResponse(final String userMessage) {
+        return handlers.get(0).handleResponse(userMessage);
     }
 
 }

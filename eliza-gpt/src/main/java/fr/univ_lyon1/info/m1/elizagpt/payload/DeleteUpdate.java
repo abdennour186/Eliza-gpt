@@ -1,4 +1,4 @@
-package fr.univ_lyon1.info.m1.elizagpt.command;
+package fr.univ_lyon1.info.m1.elizagpt.payload;
 
 /**
  * Represents a specific update type for deleting a message in the ElizaGPT application.
@@ -13,7 +13,7 @@ package fr.univ_lyon1.info.m1.elizagpt.command;
  * such as the {@link fr.univ_lyon1.info.m1.elizagpt.controller.Controller}, to communicate and
  * execute delete-related updates.</p>
  *
- * @see fr.univ_lyon1.info.m1.elizagpt.command.Update
+ * @see fr.univ_lyon1.info.m1.elizagpt.payload.Update
  * @see fr.univ_lyon1.info.m1.elizagpt.controller.Controller
  */
 public class DeleteUpdate extends Update {
