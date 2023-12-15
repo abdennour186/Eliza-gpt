@@ -25,8 +25,8 @@ public class MessageProcessor {
     private final MessageManager messageManager;
 
     private final ResponseGenerator responseGenerator;
-    private SearchStrategy searchStrategy;
 
+    private SearchStrategy searchStrategy;
 
 
     /**
@@ -127,7 +127,7 @@ public class MessageProcessor {
     public void setSearchStrategy(SearchStrategy strategy){
         this.searchStrategy = strategy;
     }
-
+    public SearchStrategy getSearchStrategy() {return searchStrategy; }
 
 
 }
