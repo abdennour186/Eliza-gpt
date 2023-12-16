@@ -98,11 +98,11 @@ public class Controller extends Subject {
     public String generateElizaResponse(final String userMessage) {
         return model.generateElizaResponse(userMessage);
     }
-    public void setSearchStrategy(SearchStrategy strategy){
+    public void setSearchStrategy(final SearchStrategy strategy) {
         this.model.setSearchStrategy(strategy);
     }
 
-    public List<SearchStrategy> getSearchStrategies(){
+    public List<SearchStrategy> getSearchStrategies() {
         return Arrays.asList(
                 SubStringSearchStrategy.getInstance(),
                 RegexSearchStrategy.getInstance(),

@@ -13,12 +13,12 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 class BestClubHandlerTest {
-    BestClubHandler bestClubHandler;
+    private BestClubHandler bestClubHandler;
     @Mock
-    ResponseHandler responseHandlerMock;
+    private ResponseHandler responseHandlerMock;
 
     @BeforeEach
-    public void setUp(){
+    public void setUp() {
         bestClubHandler = new BestClubHandler();
         responseHandlerMock = mock(ResponseHandler.class);
         bestClubHandler.setNextHandler(responseHandlerMock);
@@ -27,14 +27,14 @@ class BestClubHandlerTest {
     @Test
     void generateResponse() {
         String input = "Quelle est la meilleure équipe du foot ?";
-        String expected_res  = "Bien sûr c'est le Real Madrid !";
+        String expectedResponse  = "Bien sûr c'est le Real Madrid !";
         String result = bestClubHandler.handleResponse(input);
 
-        assertEquals(result,expected_res);
+        assertEquals(result, expectedResponse);
     }
 
     @Test
-    void generateFalseResponse(){
+    void generateFalseResponse() {
         String input = "Test input ?";
         String result = bestClubHandler.handleResponse(input);
 

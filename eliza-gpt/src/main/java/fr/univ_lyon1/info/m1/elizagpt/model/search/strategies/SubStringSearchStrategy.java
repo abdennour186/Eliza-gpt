@@ -11,7 +11,7 @@ public class SubStringSearchStrategy implements SearchStrategy {
 
     private static SubStringSearchStrategy instance = null;
     @Override
-    public List<Message> search(List<Message> messages, String text) {
+    public List<Message> search(final List<Message> messages, final String text) {
         ArrayList<Message> filteredMessages = new ArrayList<>();
         for (Message message : messages) {
             if (message.getText().toLowerCase().contains(text.toLowerCase())) {
@@ -21,12 +21,13 @@ public class SubStringSearchStrategy implements SearchStrategy {
         return filteredMessages;
     }
 
-    public static SubStringSearchStrategy getInstance(){
-        if(instance == null)
+    public static SubStringSearchStrategy getInstance() {
+        if (instance == null) {
             instance = new SubStringSearchStrategy();
+        }
         return instance;
     }
-    private SubStringSearchStrategy(){};
+    private SubStringSearchStrategy() {};
 
     @Override
     public String toString() {

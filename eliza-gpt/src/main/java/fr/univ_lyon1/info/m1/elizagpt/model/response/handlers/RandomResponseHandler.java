@@ -10,7 +10,7 @@ public class RandomResponseHandler extends RandomResponse implements ResponseHan
     private ResponseHandler nextHandler;
 
     @Override
-    public String handleResponse(String userMessage) {
+    public String handleResponse(final String userMessage) {
 
         if (random.nextBoolean()) {
             return "Il fait beau aujourd'hui, vous ne trouvez pas ?";
@@ -25,7 +25,7 @@ public class RandomResponseHandler extends RandomResponse implements ResponseHan
     }
 
     @Override
-    public void setNextHandler(ResponseHandler handler) {
+    public void setNextHandler(final ResponseHandler handler) {
         this.nextHandler = handler;
     }
 }

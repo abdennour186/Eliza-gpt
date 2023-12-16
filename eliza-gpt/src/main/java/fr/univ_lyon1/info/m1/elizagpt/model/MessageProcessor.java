@@ -5,7 +5,16 @@ package fr.univ_lyon1.info.m1.elizagpt.model;
 import fr.univ_lyon1.info.m1.elizagpt.model.message.Message;
 import fr.univ_lyon1.info.m1.elizagpt.model.message.MessageManager;
 import fr.univ_lyon1.info.m1.elizagpt.model.response.ResponseGenerator;
-import fr.univ_lyon1.info.m1.elizagpt.model.response.handlers.*;
+import fr.univ_lyon1.info.m1.elizagpt.model.response.handlers.NameResponseHandler;
+import fr.univ_lyon1.info.m1.elizagpt.model.response.handlers.DefaultResponseHandler;
+import fr.univ_lyon1.info.m1.elizagpt.model.response.handlers.TeacherResponseHandler;
+import fr.univ_lyon1.info.m1.elizagpt.model.response.handlers.UserNameResponseHandler;
+import fr.univ_lyon1.info.m1.elizagpt.model.response.handlers.VerbResponseHandler;
+import fr.univ_lyon1.info.m1.elizagpt.model.response.handlers.BestClubHandler;
+import fr.univ_lyon1.info.m1.elizagpt.model.response.handlers.RandomResponseHandler;
+import fr.univ_lyon1.info.m1.elizagpt.model.response.handlers.ByeResponseHandler;
+import fr.univ_lyon1.info.m1.elizagpt.model.response.handlers.QuestionResponseHandler;
+
 import fr.univ_lyon1.info.m1.elizagpt.model.search.SearchStrategy;
 import fr.univ_lyon1.info.m1.elizagpt.model.search.strategies.SubStringSearchStrategy;
 
@@ -20,7 +29,7 @@ import java.util.List;
  * searching for messages, generating responses, and more. This class acts as a core component
  * in managing and interpreting user interactions.
  */
-public class MessageProcessor implements UserName{
+public class MessageProcessor implements UserName {
 
     private final List<Message> messages;
     private final MessageManager messageManager;
@@ -54,11 +63,12 @@ public class MessageProcessor implements UserName{
                         new DefaultResponseHandler(this)
                 )
         );
-        this.addMessage("Bonjour" , Message.Sender.ELIZA);
+        this.addMessage("Bonjour", Message.Sender.ELIZA);
         this.searchStrategy = SubStringSearchStrategy.getInstance();
 
     }
-    public MessageProcessor(MessageManager messManage, SearchStrategy searchStrategy, ResponseGenerator response, ArrayList<Message> messages) {
+    public MessageProcessor(final MessageManager messManage, final SearchStrategy searchStrategy,
+                            final ResponseGenerator response, final ArrayList<Message> messages) {
         this.messages = messages;
         this.messageManager = messManage;
         this.responseGenerator = response;
@@ -89,7 +99,7 @@ public class MessageProcessor implements UserName{
      */
     public Message addMessage(final String text, final Message.Sender sender) {
         String normalizedText = normalize(text);
-        return this.messageManager.addMessage(normalizedText , sender);
+        return this.messageManager.addMessage(normalizedText, sender);
     }
 
     /**
@@ -107,7 +117,7 @@ public class MessageProcessor implements UserName{
      * @return A list of messages that contain the specified text.
      */
     public List<Message> search(final String text) {
-        return searchStrategy.search(messages,text);
+        return searchStrategy.search(messages, text);
     }
 
     /**
@@ -130,15 +140,17 @@ public class MessageProcessor implements UserName{
     public List<Message> getMessages() {
         return messages;
     }
-    public void setSearchStrategy(SearchStrategy strategy){
+    public void setSearchStrategy(final SearchStrategy strategy) {
         this.searchStrategy = strategy;
     }
 
-    public SearchStrategy getSearchStrategy() {return searchStrategy; }
+    public SearchStrategy getSearchStrategy() {
+        return searchStrategy;
+    }
 
 
     @Override
-    public void setUserName(String userName) {
+    public void setUserName(final String userName) {
         this.userName = userName;
     }
 

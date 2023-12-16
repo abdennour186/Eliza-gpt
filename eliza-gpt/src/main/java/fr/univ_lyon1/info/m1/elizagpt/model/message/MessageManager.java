@@ -6,7 +6,7 @@ public class MessageManager {
 
     private final List<Message> messages;
 
-    public MessageManager(final List<Message> messages){
+    public MessageManager(final List<Message> messages) {
         this.messages = messages;
     }
 

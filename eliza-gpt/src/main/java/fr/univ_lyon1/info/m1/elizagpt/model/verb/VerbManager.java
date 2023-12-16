@@ -11,14 +11,15 @@ public class VerbManager {
 
     private static VerbManager instance = null;
     private final List<Verb> verbs;
-    private VerbManager(String filePath) {
+    private VerbManager(final String filePath) {
         this.verbs = new ArrayList<>();
         this.loadVerbsFromFile(filePath);
     }
 
     public static VerbManager getInstance(String filePath) {
-        if(instance == null)
+        if (instance == null) {
             instance = new VerbManager(filePath);
+        }
         return instance;
     }
 
@@ -26,7 +27,7 @@ public class VerbManager {
         return verbs;
     }
 
-    private void loadVerbsFromFile(String filePath){
+    private void loadVerbsFromFile(final String filePath) {
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
 
@@ -35,8 +36,10 @@ public class VerbManager {
                 // Split the line into cells using a comma as the delimiter
                 String[] columnTitles = line.split(",");
 
-                int firstSingularIndex = Arrays.asList(columnTitles).indexOf("indicative|present|first person singular");
-                int secondPluralIndex = Arrays.asList(columnTitles).indexOf("indicative|present|second person plural");
+                int firstSingularIndex = Arrays.asList(columnTitles)
+                        .indexOf("indicative|present|first person singular");
+                int secondPluralIndex = Arrays.asList(columnTitles)
+                        .indexOf("indicative|present|second person plural");
 
 
 
@@ -46,9 +49,9 @@ public class VerbManager {
 
                     String firstSingular = Arrays.asList(verbs).get(firstSingularIndex);
                     String secondPlural = Arrays.asList(verbs).get(secondPluralIndex);
-                    if(!firstSingular.isEmpty())
-                        this.verbs.add(new Verb(firstSingular,secondPlural));
-
+                    if (!firstSingular.isEmpty()) {
+                        this.verbs.add(new Verb(firstSingular, secondPlural));
+                    }
                 }
             }
         } catch (IOException e) {

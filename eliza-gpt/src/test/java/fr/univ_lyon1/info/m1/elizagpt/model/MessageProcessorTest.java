@@ -9,7 +9,11 @@ import fr.univ_lyon1.info.m1.elizagpt.model.message.MessageManager;
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,24 +23,25 @@ import org.mockito.Mock;
  */
 public class MessageProcessorTest {
 
-    MessageProcessor messageProcessor;
+    private MessageProcessor messageProcessor;
     @Mock
-    MessageManager messageManagerMock;
+    private MessageManager messageManagerMock;
     @Mock
-    SearchStrategy searchStrategyMock;
+    private SearchStrategy searchStrategyMock;
     @Mock
-    ResponseGenerator responseGeneratorMock;
-    ArrayList< Message > Messages;
+    private ResponseGenerator responseGeneratorMock;
+    private ArrayList<Message> messages;
     @BeforeEach
-    public void setUp(){
+    public void setUp() {
         messageManagerMock = mock(MessageManager.class);
         searchStrategyMock = mock(SearchStrategy.class);
         responseGeneratorMock = mock(ResponseGenerator.class);
-        Messages = new ArrayList<>();
-        Messages.add(new Message("a test text !", Message.Sender.USER));
-        Messages.add(new Message("a new test text !", Message.Sender.ELIZA));
-        Messages.add(new Message("another one !", Message.Sender.ELIZA));
-        messageProcessor = new MessageProcessor(messageManagerMock, searchStrategyMock, responseGeneratorMock, Messages);
+        messages = new ArrayList<>();
+        messages.add(new Message("a test text !", Message.Sender.USER));
+        messages.add(new Message("a new test text !", Message.Sender.ELIZA));
+        messages.add(new Message("another one !", Message.Sender.ELIZA));
+        messageProcessor = new MessageProcessor(messageManagerMock, searchStrategyMock,
+                responseGeneratorMock, messages);
     }
 
     @Test
@@ -62,7 +67,8 @@ public class MessageProcessorTest {
         Message.Sender sender = Message.Sender.USER;
         Message expectedMessage = new Message(normalizedInput, sender);
 
-        when(messageManagerMock.addMessage(eq(normalizedInput), eq(sender))).thenReturn(expectedMessage);
+        when(messageManagerMock.addMessage(eq(normalizedInput),
+                eq(sender))).thenReturn(expectedMessage);
 
         // Act
         Message result = messageProcessor.addMessage(input, sender);
@@ -74,7 +80,7 @@ public class MessageProcessorTest {
 
     @Test
     void deleteMessage() {
-        ArrayList< Message > expectedList = new ArrayList<>();
+        ArrayList<Message> expectedList = new ArrayList<>();
         expectedList.add(new Message("a test text !", Message.Sender.USER));
         expectedList.add(new Message("a new test text !", Message.Sender.ELIZA));
         int messageId = 2;
@@ -85,14 +91,14 @@ public class MessageProcessorTest {
     @Test
     void search() {
         //initialisation of the variables
-        String ToSearch = "a new test text !";
-        ArrayList< Message > expectedList = new ArrayList<>();
-        expectedList.add(new Message(ToSearch, any()));
+        String toSearch = "a new test text !";
+        ArrayList<Message> expectedList = new ArrayList<>();
+        expectedList.add(new Message(toSearch, any()));
 
-        when(searchStrategyMock.search(Messages, eq(ToSearch))).thenReturn(expectedList);
-        List<Message> result = messageProcessor.search(ToSearch);
+        when(searchStrategyMock.search(messages, eq(toSearch))).thenReturn(expectedList);
+        List<Message> result = messageProcessor.search(toSearch);
 
-        verify(searchStrategyMock).search(any(), eq(ToSearch));
+        verify(searchStrategyMock).search(any(), eq(toSearch));
 
         assertEquals(result, expectedList);
 
@@ -104,7 +110,8 @@ public class MessageProcessorTest {
         String normalizedInput = messageProcessor.normalize(input);
         String expectedString = "Bien sûr c'est le Real Madrid !";
 
-        when(responseGeneratorMock.generateElizaResponse(normalizedInput)).thenReturn(expectedString);
+        when(responseGeneratorMock.generateElizaResponse(normalizedInput)).
+                thenReturn(expectedString);
         String result = messageProcessor.generateElizaResponse(input);
         verify(responseGeneratorMock).generateElizaResponse(eq(normalizedInput));
         assertEquals(expectedString, result);
@@ -113,6 +120,6 @@ public class MessageProcessorTest {
     @Test
     void getMessages() {
         List<Message> result = messageProcessor.getMessages();
-        assertEquals(Messages, result);
+        assertEquals(messages, result);
     }
 }

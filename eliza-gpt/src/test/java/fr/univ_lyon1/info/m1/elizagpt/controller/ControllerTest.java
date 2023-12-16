@@ -2,30 +2,29 @@ package fr.univ_lyon1.info.m1.elizagpt.controller;
 
 import fr.univ_lyon1.info.m1.elizagpt.model.MessageProcessor;
 import fr.univ_lyon1.info.m1.elizagpt.model.message.Message;
-import fr.univ_lyon1.info.m1.elizagpt.model.message.MessageManager;
 import fr.univ_lyon1.info.m1.elizagpt.model.search.SearchStrategy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
-import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.mock;
+
 
 class ControllerTest {
-    Controller controller;
-    ArrayList<Message> Messages;
+    private Controller controller;
     @Mock
-    MessageProcessor messageProcessorMock;
+    private MessageProcessor messageProcessorMock;
     @Mock
-    Subject subjectMock;
-    @Mock
-    SearchStrategy searchStrategyMock;
+    private SearchStrategy searchStrategyMock;
     @BeforeEach
-    public void setUp(){
+    public void setUp() {
         messageProcessorMock = mock(MessageProcessor.class);
-        subjectMock = mock(Subject.class);
         controller = new Controller(messageProcessorMock);
     }
     @Test

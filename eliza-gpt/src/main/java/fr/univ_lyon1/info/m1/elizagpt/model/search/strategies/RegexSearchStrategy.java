@@ -32,7 +32,7 @@ public class RegexSearchStrategy implements SearchStrategy {
             instance = new RegexSearchStrategy();
         return instance;
     }
-    private RegexSearchStrategy(){}
+    private RegexSearchStrategy() {}
 
     @Override
     public String toString() {

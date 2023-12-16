@@ -13,7 +13,7 @@ public class WordSearchStrategy implements SearchStrategy {
     private static WordSearchStrategy instance = null;
 
     @Override
-    public List<Message> search(List<Message> messages, String text) {
+    public List<Message> search(final List<Message> messages, final String text) {
         ArrayList<Message> filteredMessages = new ArrayList<>();
         Pattern pattern = Pattern.compile(".*\\b" + text + "\\b.*", Pattern.CASE_INSENSITIVE);
         for (Message message : messages) {
@@ -25,12 +25,13 @@ public class WordSearchStrategy implements SearchStrategy {
         return filteredMessages;
     }
 
-    public static WordSearchStrategy getInstance(){
-        if(instance == null)
+    public static WordSearchStrategy getInstance() {
+        if (instance == null) {
             instance = new WordSearchStrategy();
+        }
         return instance;
     }
-    private WordSearchStrategy(){}
+    private WordSearchStrategy() { }
 
     @Override
     public String toString() {

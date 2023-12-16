@@ -5,14 +5,14 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 class MessageManagerTest {
-    ArrayList<Message> messages;
-    MessageManager messageManager;
+    private  ArrayList<Message> messages;
+    private MessageManager messageManager;
     @BeforeEach
-    public void setUp(){
+    public void setUp() {
         messages = new ArrayList<>();
         messages.add(new Message("a test text !", Message.Sender.USER));
         messages.add(new Message("a new test text !", Message.Sender.ELIZA));
@@ -30,20 +30,20 @@ class MessageManagerTest {
 
 
 
-        assertEquals(oldSize+1, newSize);
+        assertEquals(oldSize + 1, newSize);
         assertEquals(result.getText(), newMessageText);
         assertEquals(result.getSender(), newMessageSender);
-        assertEquals(messages.get(messages.size()-1).getText(), newMessageText);
+        assertEquals(messages.get(messages.size() - 1).getText(), newMessageText);
     }
 
     @Test
     void deleteMessage() {
-        int MessageId = messages.get(0).getId();
+        int messageId = messages.get(0).getId();
 
         int oldSize = messages.size();
-        messageManager.deleteMessage(MessageId);
+        messageManager.deleteMessage(messageId);
         int newSize = messages.size();
-        assertEquals(oldSize-1, newSize);
+        assertEquals(oldSize - 1, newSize);
         assertEquals(messages.get(1).getText(), "another one !");
     }
 }

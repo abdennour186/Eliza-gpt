@@ -14,7 +14,7 @@ public class QuestionResponseHandler extends RandomResponse implements ResponseH
 
 
     @Override
-    public String handleResponse(String userMessage) {
+    public String handleResponse(final String userMessage) {
         Pattern pattern = Pattern.compile(".*\\?");
         Matcher matcher = pattern.matcher(userMessage);
         if (matcher.matches()) {
@@ -27,7 +27,7 @@ public class QuestionResponseHandler extends RandomResponse implements ResponseH
     }
 
     @Override
-    public void setNextHandler(ResponseHandler handler) {
+    public void setNextHandler(final ResponseHandler handler) {
             this.nextHandler = handler;
     }
 }

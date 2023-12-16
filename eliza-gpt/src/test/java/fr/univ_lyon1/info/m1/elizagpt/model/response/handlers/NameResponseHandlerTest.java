@@ -1,25 +1,25 @@
 package fr.univ_lyon1.info.m1.elizagpt.model.response.handlers;
 
 import fr.univ_lyon1.info.m1.elizagpt.model.UserName;
-import fr.univ_lyon1.info.m1.elizagpt.model.message.Message;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
-import java.util.ArrayList;
+
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 
 class NameResponseHandlerTest {
 
-    NameResponseHandler nameResponseHandler;
+    private NameResponseHandler nameResponseHandler;
 
 
     @Mock
-    UserName userName;
+    private UserName userName;
     @BeforeEach
-    public void setUp(){
+    public void setUp() {
         userName = mock(UserName.class);
         nameResponseHandler = new NameResponseHandler(userName);
     }
@@ -30,6 +30,6 @@ class NameResponseHandlerTest {
         String expectedResponse  = "Bonjour abdennour.";
         String result = nameResponseHandler.handleResponse(input);
 
-        assertEquals(result,expectedResponse);
+        assertEquals(result, expectedResponse);
     }
 }

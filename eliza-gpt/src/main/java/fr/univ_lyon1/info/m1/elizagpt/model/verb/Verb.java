@@ -20,9 +20,13 @@ public class Verb {
 
     @Override
     public String toString() {
-        return "Verb{" +
-                "firstSingular='" + firstSingular + '\'' +
-                ", secondPlural='" + secondPlural + '\'' +
-                '}';
+        return "Verb{"
+                + "firstSingular='"
+                + firstSingular
+                + '\''
+                + ", secondPlural='"
+                + secondPlural
+                + '\''
+                + '}';
     }
 }

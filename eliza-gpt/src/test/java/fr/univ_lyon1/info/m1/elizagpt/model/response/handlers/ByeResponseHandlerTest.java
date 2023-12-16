@@ -1,13 +1,11 @@
 package fr.univ_lyon1.info.m1.elizagpt.model.response.handlers;
 
-import fr.univ_lyon1.info.m1.elizagpt.model.MessageProcessor;
 import fr.univ_lyon1.info.m1.elizagpt.model.UserName;
-import fr.univ_lyon1.info.m1.elizagpt.model.message.Message;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
-import java.util.ArrayList;
+
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -15,14 +13,13 @@ import static org.mockito.Mockito.when;
 
 class ByeResponseHandlerTest {
 
-    ByeResponseHandler byeResponseHandler;
+    private ByeResponseHandler byeResponseHandler;
 
-    MessageProcessor messageProcessor;
 
     @Mock
-    UserName userName;
+    private UserName userName;
     @BeforeEach
-    public void setUp(){
+    public void setUp() {
         userName = mock(UserName.class);
         byeResponseHandler = new ByeResponseHandler(userName);
     }
@@ -33,7 +30,7 @@ class ByeResponseHandlerTest {
         String input = "Au revoir.";
         String expectedRes  = "Oh non, c'est trop triste de se quitter !";
         String result = byeResponseHandler.handleResponse(input);
-        assertEquals(result,expectedRes);
+        assertEquals(result, expectedRes);
     }
     @Test
     void generateResponseWithName() {
@@ -41,6 +38,6 @@ class ByeResponseHandlerTest {
         String input = "Au revoir.";
         String expectedRes  = "Oh non, c'est trop triste de se quitter abdennour !";
         String result = byeResponseHandler.handleResponse(input);
-        assertEquals(expectedRes,result);
+        assertEquals(expectedRes, result);
     }
 }

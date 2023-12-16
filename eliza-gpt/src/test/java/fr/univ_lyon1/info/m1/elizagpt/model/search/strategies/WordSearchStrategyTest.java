@@ -7,12 +7,13 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 class WordSearchStrategyTest {
 
-    WordSearchStrategy wordSearchStrategy;
-    ArrayList<Message> messages;
+    private WordSearchStrategy wordSearchStrategy;
+    private ArrayList<Message> messages;
 
     @BeforeEach
     public void setUp() {

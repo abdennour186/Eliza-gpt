@@ -5,36 +5,36 @@ import org.junit.jupiter.api.Test;
 
 import static fr.univ_lyon1.info.m1.elizagpt.model.message.Message.Sender.ELIZA;
 import static fr.univ_lyon1.info.m1.elizagpt.model.message.Message.Sender.USER;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class MessageTest {
-    public Message msg ;
+    private Message message;
 
     @BeforeEach
     public void setUp() {
-        msg = new Message("the text", ELIZA);
+        message = new Message("the text", ELIZA);
     }
 
     @Test
     void getText() {
-        assertEquals("the text", msg.getText());
+        assertEquals("the text", message.getText());
     }
 
     @Test
     void getSender() {
-        assertEquals(ELIZA, msg.getSender());
+        assertEquals(ELIZA, message.getSender());
     }
 
     @Test
     void setText() {
-        msg.setText("the new text");
-        assertEquals("the new text", msg.getText());
+        message.setText("the new text");
+        assertEquals("the new text", message.getText());
     }
 
     @Test
     void setSender() {
-        msg.setSender(USER);
-        assertEquals(USER, msg.getSender());
+        message.setSender(USER);
+        assertEquals(USER, message.getSender());
     }
 
 }

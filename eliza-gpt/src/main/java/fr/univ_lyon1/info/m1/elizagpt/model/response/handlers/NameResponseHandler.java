@@ -11,9 +11,9 @@ import java.util.regex.Pattern;
 public class NameResponseHandler implements ResponseHandler {
 
     private ResponseHandler nextHandler;
-    private UserName userName;
+    private final UserName userName;
 
-    public NameResponseHandler(UserName userName){
+    public NameResponseHandler(final UserName userName) {
         this.userName = userName;
     }
 
@@ -34,7 +34,7 @@ public class NameResponseHandler implements ResponseHandler {
     }
 
     @Override
-    public void setNextHandler(ResponseHandler handler) {
+    public void setNextHandler(final ResponseHandler handler) {
         this.nextHandler = handler;
     }
 }

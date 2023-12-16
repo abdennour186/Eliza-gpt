@@ -21,7 +21,7 @@ public class UserNameResponseHandler implements ResponseHandler {
     }
 
     @Override
-    public String handleResponse(String userMessage) {
+    public String handleResponse(final String userMessage) {
         Pattern pattern = Pattern.compile("Quel est mon nom \\?", Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(userMessage);
         if (matcher.matches()) {
@@ -36,7 +36,7 @@ public class UserNameResponseHandler implements ResponseHandler {
     }
 
     @Override
-    public void setNextHandler(ResponseHandler handler) {
+    public void setNextHandler(final ResponseHandler handler) {
         this.nextHandler = handler;
     }
 }

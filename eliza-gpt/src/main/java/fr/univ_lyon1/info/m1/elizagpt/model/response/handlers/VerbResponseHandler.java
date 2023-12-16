@@ -16,7 +16,7 @@ public class VerbResponseHandler extends RandomResponse implements ResponseHandl
     protected static final List<Verb> VERBS = VerbManager.getInstance("./src/main/resources/french-verb-conjugation.csv").getVerbs();
 
     @Override
-    public String handleResponse(String userMessage) {
+    public String handleResponse(final String userMessage) {
         Pattern pattern = Pattern.compile("(Je .*)\\.", Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(userMessage);
         if (matcher.matches()) {
@@ -48,7 +48,7 @@ public class VerbResponseHandler extends RandomResponse implements ResponseHandl
     }
 
     @Override
-    public void setNextHandler(ResponseHandler handler) {
+    public void setNextHandler(final ResponseHandler handler) {
         this.nextHandler = handler;
     }
 }

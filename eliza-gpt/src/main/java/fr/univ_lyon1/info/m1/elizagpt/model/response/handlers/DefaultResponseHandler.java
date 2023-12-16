@@ -11,7 +11,9 @@ public class DefaultResponseHandler implements ResponseHandler {
 
     private final UserName userName;
 
-    public DefaultResponseHandler(UserName userName){
+    private ResponseHandler nextHandler;
+
+    public DefaultResponseHandler(final UserName userName){
         this.userName = userName;
     }
 
@@ -26,6 +28,8 @@ public class DefaultResponseHandler implements ResponseHandler {
     }
 
     @Override
-    public void setNextHandler(ResponseHandler handler) {return;}
+    public void setNextHandler(ResponseHandler handler) {
+        this.nextHandler = handler;
+    }
 
 }

@@ -12,7 +12,7 @@ public class TeacherResponseHandler implements ResponseHandler {
     private ResponseHandler nextHandler;
 
     @Override
-    public String handleResponse(String userMessage) {
+    public String handleResponse(final String userMessage) {
         Pattern pattern = Pattern.compile("Qui est le plus (.*) \\?", Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(userMessage);
         if (matcher.matches()) {
@@ -22,7 +22,7 @@ public class TeacherResponseHandler implements ResponseHandler {
     }
 
     @Override
-    public void setNextHandler(ResponseHandler handler) {
+    public void setNextHandler(final ResponseHandler handler) {
          this.nextHandler = handler;
     }
 }
