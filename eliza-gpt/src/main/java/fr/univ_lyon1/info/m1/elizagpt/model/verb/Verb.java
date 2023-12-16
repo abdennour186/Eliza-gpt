@@ -1,7 +1,8 @@
 package fr.univ_lyon1.info.m1.elizagpt.model.verb;
 
 /**
- * The Verb class represents a verb in a natural language, providing information about its conjugations.
+ * The Verb class represents a verb in a natural language, providing
+ * information about its conjugations.
  *
  * @version 1.0
  */

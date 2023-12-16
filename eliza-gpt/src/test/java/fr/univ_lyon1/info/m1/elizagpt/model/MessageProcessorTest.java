@@ -31,6 +31,9 @@ public class MessageProcessorTest {
     @Mock
     private ResponseGenerator responseGeneratorMock;
     private ArrayList<Message> messages;
+    /**
+     * setting up the parameters for the testing.
+     */
     @BeforeEach
     public void setUp() {
         messageManagerMock = mock(MessageManager.class);

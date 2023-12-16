@@ -14,12 +14,13 @@ import java.util.regex.Pattern;
  *
  * @version 1.0
  */
-public class WordSearchStrategy implements SearchStrategy {
+public final class WordSearchStrategy implements SearchStrategy {
 
     private static WordSearchStrategy instance = null;
 
     /**
-     * Searches for messages containing the specified complete word within the provided list of messages.
+     * Searches for messages containing the specified complete word within
+     * the provided list of messages.
      *
      * @param messages The list of messages to search within.
      * @param text     The complete word to search for within messages.

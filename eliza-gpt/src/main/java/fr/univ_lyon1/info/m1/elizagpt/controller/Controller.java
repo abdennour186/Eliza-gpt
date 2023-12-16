@@ -90,12 +90,6 @@ public class Controller extends Subject {
     }
 
     /**
-     * Generates an Eliza response for the given user message.
-     *
-     * @param userMessage The user's message for which an Eliza response is generated.
-     * @return The generated Eliza response.
-     */
-    /**
      * Generates an Eliza GPT response based on the user's input.
      *
      * @param userMessage The user's input message.

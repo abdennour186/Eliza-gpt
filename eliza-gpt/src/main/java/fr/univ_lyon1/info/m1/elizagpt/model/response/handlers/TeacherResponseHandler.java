@@ -12,7 +12,8 @@ import java.util.regex.Pattern;
  *
  * <p>This handler checks if the user's message contains a
  * specific pattern related to asking about
- * the "most" in a certain context and provides a predefined response. If the pattern does not match,
+ * the "most" in a certain context and provides
+ * a predefined response. If the pattern does not match,
  * it delegates the request to the next handler in the chain of responsibility.</p>
  *
  * @see fr.univ_lyon1.info.m1.elizagpt.model.response.ResponseHandler
@@ -23,7 +24,8 @@ public class TeacherResponseHandler implements ResponseHandler {
     private ResponseHandler nextHandler;
 
     /**
-     * Generates a response based on the user's input, specifically handling queries about the most something.
+     * Generates a response based on the user's input,
+     * specifically handling queries about the most something.
      *
      * @param userMessage The user's input message.
      * @return The generated response.

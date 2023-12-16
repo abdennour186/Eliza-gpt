@@ -24,8 +24,11 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ComboBox;
 
 
-import java.util.*;
-
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Objects;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * The JfxView class represents the JavaFX-based
@@ -151,7 +154,9 @@ public class JfxView implements Observer {
             controller.setSearchStrategy(strategy);
         });
         searchBox.setPromptText("Select search strategy");
-        searchBox.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/styles/combo-box.css")).toExternalForm());
+        searchBox.getStylesheets().add(Objects.requireNonNull(getClass()
+                                        .getResource("/styles/combo-box.css"))
+                                        .toExternalForm());
         return searchBox;
     }
     /**
@@ -334,7 +339,9 @@ public class JfxView implements Observer {
         });
         if (message.getSender() == Message.Sender.ELIZA) {
             hBox.getChildren().addAll(label, button);
-        } else hBox.getChildren().addAll(button , label);
+        } else {
+            hBox.getChildren().addAll(button, label);
+        }
 
         parentHBox.getChildren().add(hBox);
         return parentHBox;

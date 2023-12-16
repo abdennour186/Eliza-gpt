@@ -27,10 +27,13 @@ import java.util.regex.Pattern;
 public class VerbResponseHandler extends RandomResponse implements ResponseHandler {
 
     private ResponseHandler nextHandler;
-    protected static final List<Verb> VERBS = VerbManager.getInstance("./src/main/resources/french-verb-conjugation.csv").getVerbs();
+    protected static final List<Verb> VERBS = VerbManager
+                            .getInstance("./src/main/resources/french-verb-conjugation.csv")
+                            .getVerbs();
 
     /**
-     * Handles the user's message, responding to statements starting with "Je" (I) by converting them
+     * Handles the user's message, responding to statements starting
+     * with "Je" (I) by converting them
      * to second-person questions related to verb conjugations.
      *
      * @param userMessage The user's message.

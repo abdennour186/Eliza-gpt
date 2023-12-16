@@ -12,13 +12,14 @@ import java.util.List;
  *
  * @version 1.0
  */
-public class VerbManager {
+public final class VerbManager {
 
     private static VerbManager instance = null;
     private final List<Verb> verbs;
 
     /**
-     * Constructs a new VerbManager instance with an empty list of verbs and loads verbs from the specified file.
+     * Constructs a new VerbManager instance with an empty
+     * list of verbs and loads verbs from the specified file.
      *
      * @param filePath The path to the file containing verb conjugations.
      */
@@ -33,7 +34,7 @@ public class VerbManager {
      * @param filePath The path to the file containing verb conjugations.
      * @return The singleton instance of the VerbManager.
      */
-    public static VerbManager getInstance(String filePath) {
+    public static VerbManager getInstance(final String filePath) {
         if (instance == null) {
             instance = new VerbManager(filePath);
         }
@@ -59,7 +60,8 @@ public class VerbManager {
             String line;
 
             // Read the first line to get column titles
-            if ((line = reader.readLine()) != null) {
+            line = reader.readLine();
+            if (line != null) {
                 // Split the line into cells using a comma as the delimiter
                 String[] columnTitles = line.split(",");
 

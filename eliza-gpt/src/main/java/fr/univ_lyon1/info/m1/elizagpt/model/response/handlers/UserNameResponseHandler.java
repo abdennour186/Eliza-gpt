@@ -7,7 +7,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * The UserNameResponseHandler class handles user name-related responses in the ElizaGPT application.
+ * The UserNameResponseHandler class handles user
+ * name-related responses in the ElizaGPT application.
  * It specifically responds to queries about the user's name.
  *
  * <p>This class implements the {@link ResponseHandler} interface to provide a standardized way

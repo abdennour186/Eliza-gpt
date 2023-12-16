@@ -3,7 +3,8 @@ package fr.univ_lyon1.info.m1.elizagpt.model;
 /**
  * An interface representing the user's name in the ElizaGPT application.
  *
- * <p>Implementations of this interface should provide methods for setting and retrieving the user's name.</p>
+ * <p>Implementations of this interface should provide methods for setting
+ * and retrieving the user's name.</p>
  *
  * @version 1.0
  */

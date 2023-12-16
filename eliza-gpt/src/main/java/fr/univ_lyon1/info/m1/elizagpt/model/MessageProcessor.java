@@ -26,7 +26,8 @@ import java.util.List;
  * searching for messages, generating responses, and more. This class acts as a core component
  * in managing and interpreting user interactions.
  *
- * <p>This class implements the {@link UserName} interface to handle user name-related functionalities.</p>
+ * <p>This class implements the {@link UserName} interface
+ * to handle user name-related functionalities.</p>
  *
  * @see UserName
  * @version 1.1
@@ -70,8 +71,10 @@ public class MessageProcessor implements UserName {
      * @param responseGenerator The response generator to use.
      * @param messages The initial list of messages.
      */
-    public MessageProcessor(final MessageManager messageManager, final SearchStrategy searchStrategy,
-                            final ResponseGenerator responseGenerator, final ArrayList<Message> messages) {
+    public MessageProcessor(final MessageManager messageManager,
+                            final SearchStrategy searchStrategy,
+                            final ResponseGenerator responseGenerator,
+                            final ArrayList<Message> messages) {
         this.messages = messages;
         this.messageManager = messageManager;
         this.responseGenerator = responseGenerator;

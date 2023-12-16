@@ -12,12 +12,13 @@ import java.util.List;
  *
  * @version 1.0
  */
-public class SubStringSearchStrategy implements SearchStrategy {
+public final class SubStringSearchStrategy implements SearchStrategy {
 
     private static SubStringSearchStrategy instance = null;
 
     /**
-     * Searches for messages containing the specified substring within the provided list of messages.
+     * Searches for messages containing the specified substring
+     * within the provided list of messages.
      *
      * @param messages The list of messages to search within.
      * @param text     The substring to search for within messages.
@@ -47,7 +48,7 @@ public class SubStringSearchStrategy implements SearchStrategy {
     }
 
     // Private constructor to enforce singleton pattern
-    private SubStringSearchStrategy() {}
+    private SubStringSearchStrategy() { }
 
     /**
      * Returns a string representation of the SubStringSearchStrategy.

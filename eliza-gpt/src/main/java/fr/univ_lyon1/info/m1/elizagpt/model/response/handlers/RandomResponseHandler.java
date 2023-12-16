@@ -22,13 +22,13 @@ public class RandomResponseHandler extends RandomResponse implements ResponseHan
      */
     @Override
     public String handleResponse(final String userMessage) {
-        if (random.nextBoolean()) {
+        if (this.getRandom().nextBoolean()) {
             return "Il fait beau aujourd'hui, vous ne trouvez pas ?";
         }
-        if (random.nextBoolean()) {
+        if (this.getRandom().nextBoolean()) {
             return "Je ne comprends pas.";
         }
-        if (random.nextBoolean()) {
+        if (this.getRandom().nextBoolean()) {
             return "Hmmm, hmm ...";
         }
         return nextHandler.handleResponse(userMessage);

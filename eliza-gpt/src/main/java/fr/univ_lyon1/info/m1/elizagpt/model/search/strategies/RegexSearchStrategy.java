@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
  *
  * @version 1.0
  */
-public class RegexSearchStrategy implements SearchStrategy {
+public final class RegexSearchStrategy implements SearchStrategy {
 
     private static RegexSearchStrategy instance = null;
 
@@ -27,7 +27,7 @@ public class RegexSearchStrategy implements SearchStrategy {
      * @return A list of messages that contain the specified regular expression match.
      */
     @Override
-    public List<Message> search(List<Message> messages, String text) {
+    public List<Message> search(final List<Message> messages, final String text) {
         Pattern pattern = Pattern.compile(".*" + text + ".*", Pattern.CASE_INSENSITIVE);
 
         ArrayList<Message> filteredMessages = new ArrayList<>();
@@ -53,7 +53,7 @@ public class RegexSearchStrategy implements SearchStrategy {
     }
 
     // Private constructor to enforce singleton pattern
-    private RegexSearchStrategy() {}
+    private RegexSearchStrategy() { }
 
     /**
      * Returns a string representation of the RegexSearchStrategy.

@@ -19,5 +19,5 @@ public interface SearchStrategy {
      * @param text     The text to search for within messages.
      * @return A list of messages that contain the specified text.
      */
-    List<Message> search(final List<Message> messages, final String text);
+    List<Message> search(List<Message> messages, String text);
 }

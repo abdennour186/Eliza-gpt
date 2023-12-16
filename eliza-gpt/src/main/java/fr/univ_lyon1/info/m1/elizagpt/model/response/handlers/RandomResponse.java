@@ -11,7 +11,7 @@ import java.util.Random;
  */
 public abstract class RandomResponse {
 
-    protected final Random random = new Random();
+    private final Random random = new Random();
 
     /**
      * Picks a random element from the given array.
@@ -22,5 +22,8 @@ public abstract class RandomResponse {
      */
     public <T> T pickRandom(final T[] array) {
         return array[random.nextInt(array.length)];
+    }
+    public Random getRandom() {
+        return random;
     }
 }
