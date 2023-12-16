@@ -1,7 +1,5 @@
 package fr.univ_lyon1.info.m1.elizagpt.model;
 
-
-
 import fr.univ_lyon1.info.m1.elizagpt.model.message.Message;
 import fr.univ_lyon1.info.m1.elizagpt.model.message.MessageManager;
 import fr.univ_lyon1.info.m1.elizagpt.model.response.ResponseGenerator;
@@ -22,27 +20,24 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-
 /**
  * The MessageProcessor class is responsible for processing messages in a chatbot system.
  * It offers functionalities such as normalizing text, adding and deleting messages,
  * searching for messages, generating responses, and more. This class acts as a core component
  * in managing and interpreting user interactions.
+ *
+ * <p>This class implements the {@link UserName} interface to handle user name-related functionalities.</p>
+ *
+ * @see UserName
+ * @version 1.1
  */
 public class MessageProcessor implements UserName {
 
     private final List<Message> messages;
     private final MessageManager messageManager;
-
     private final ResponseGenerator responseGenerator;
-
-
     private SearchStrategy searchStrategy;
-
     private String userName;
-
-
-
 
     /**
      * Constructs a new MessageProcessor with an empty list of messages.
@@ -65,13 +60,21 @@ public class MessageProcessor implements UserName {
         );
         this.addMessage("Bonjour", Message.Sender.ELIZA);
         this.searchStrategy = SubStringSearchStrategy.getInstance();
-
     }
-    public MessageProcessor(final MessageManager messManage, final SearchStrategy searchStrategy,
-                            final ResponseGenerator response, final ArrayList<Message> messages) {
+
+    /**
+     * Constructs a new MessageProcessor with specified parameters.
+     *
+     * @param messageManager The message manager to use.
+     * @param searchStrategy The search strategy to use.
+     * @param responseGenerator The response generator to use.
+     * @param messages The initial list of messages.
+     */
+    public MessageProcessor(final MessageManager messageManager, final SearchStrategy searchStrategy,
+                            final ResponseGenerator responseGenerator, final ArrayList<Message> messages) {
         this.messages = messages;
-        this.messageManager = messManage;
-        this.responseGenerator = response;
+        this.messageManager = messageManager;
+        this.responseGenerator = responseGenerator;
         this.searchStrategy = searchStrategy;
     }
 
@@ -81,14 +84,12 @@ public class MessageProcessor implements UserName {
      * @param text The text to be normalized.
      * @return The normalized text.
      */
-
     public String normalize(final String text) {
         return text.replaceAll("\\s+", " ")
                 .replaceAll("^\\s+", "")
                 .replaceAll("\\s+$", "")
                 .replaceAll("[^\\.!?:]$", "$0.");
     }
-
 
     /**
      * Adds a message to the list of messages after normalizing it.
@@ -110,6 +111,7 @@ public class MessageProcessor implements UserName {
     public void deleteMessage(final int messageId) {
         this.messageManager.deleteMessage(messageId);
     }
+
     /**
      * Searches for messages containing the specified text.
      *
@@ -131,7 +133,6 @@ public class MessageProcessor implements UserName {
         return responseGenerator.generateElizaResponse(normalizedText);
     }
 
-
     /**
      * Gets the list of all messages.
      *
@@ -140,20 +141,29 @@ public class MessageProcessor implements UserName {
     public List<Message> getMessages() {
         return messages;
     }
+
+    /**
+     * Sets the search strategy for message searching.
+     *
+     * @param strategy The search strategy to set.
+     */
     public void setSearchStrategy(final SearchStrategy strategy) {
         this.searchStrategy = strategy;
     }
 
+    /**
+     * Gets the current search strategy.
+     *
+     * @return The current search strategy.
+     */
     public SearchStrategy getSearchStrategy() {
         return searchStrategy;
     }
-
 
     @Override
     public void setUserName(final String userName) {
         this.userName = userName;
     }
-
 
     @Override
     public String getUserName() {

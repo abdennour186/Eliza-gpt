@@ -1,14 +1,16 @@
 package fr.univ_lyon1.info.m1.elizagpt.view;
+
 import fr.univ_lyon1.info.m1.elizagpt.model.payload.Update;
 
-
 /**
- * The {@code ViewObserver} interface defines methods to be implemented by classes
+ * The {@code Observer} interface defines methods to be implemented by classes
  * observing changes in the view of the Eliza GPT application. Observers can react to
  * updates related to message addition, deletion, search, and undo search operations.
  * <p>
  * Classes implementing this interface should handle updates received through the
  * specified methods to maintain synchronization with the application's model.
+ *
+ * @version 1.0
  */
 public interface Observer {
 
@@ -40,5 +42,3 @@ public interface Observer {
       */
      void onUndoSearchUpdate(Update searchUpdate);
 }
-
-

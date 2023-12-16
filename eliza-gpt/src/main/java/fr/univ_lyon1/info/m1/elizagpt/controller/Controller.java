@@ -95,13 +95,30 @@ public class Controller extends Subject {
      * @param userMessage The user's message for which an Eliza response is generated.
      * @return The generated Eliza response.
      */
+    /**
+     * Generates an Eliza GPT response based on the user's input.
+     *
+     * @param userMessage The user's input message.
+     * @return The generated Eliza GPT response.
+     */
     public String generateElizaResponse(final String userMessage) {
         return model.generateElizaResponse(userMessage);
     }
+
+    /**
+     * Sets the search strategy for message searching.
+     *
+     * @param strategy The search strategy to be set.
+     */
     public void setSearchStrategy(final SearchStrategy strategy) {
         this.model.setSearchStrategy(strategy);
     }
 
+    /**
+     * Gets a list of available search strategies.
+     *
+     * @return A list of search strategies.
+     */
     public List<SearchStrategy> getSearchStrategies() {
         return Arrays.asList(
                 SubStringSearchStrategy.getInstance(),
@@ -109,4 +126,5 @@ public class Controller extends Subject {
                 WordSearchStrategy.getInstance()
         );
     }
+
 }

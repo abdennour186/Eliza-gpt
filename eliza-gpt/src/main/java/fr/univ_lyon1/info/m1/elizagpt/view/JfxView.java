@@ -116,14 +116,18 @@ public class JfxView implements Observer {
         searchComboBox = createComboBox();
 
         final Button searchButton = new Button("Search");
-        searchButton.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/styles/buttons.css")).toExternalForm());
+        searchButton.getStylesheets()
+                .add(Objects.requireNonNull(getClass()
+                        .getResource("/styles/buttons.css")).toExternalForm());
         searchButton.getStyleClass().add("search-button");
         searchButton.setOnAction(e -> searchText());
         searchButton.setOnMouseEntered(event -> searchButton.setCursor(Cursor.HAND));
 
 
         final Button undoSearchButton = new Button("Undo search");
-        undoSearchButton.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/styles/buttons.css")).toExternalForm());
+        undoSearchButton.getStylesheets()
+                .add(Objects.requireNonNull(getClass()
+                        .getResource("/styles/buttons.css")).toExternalForm());
         undoSearchButton.getStyleClass().add("undo-search-button");
         undoSearchButton.setOnAction(e -> controller.undoSearch());
         undoSearchButton.setOnMouseEntered(event -> undoSearchButton.setCursor(Cursor.HAND));
@@ -139,7 +143,7 @@ public class JfxView implements Observer {
         return input;
     }
 
-    private ComboBox<SearchStrategy> createComboBox(){
+    private ComboBox<SearchStrategy> createComboBox() {
         ComboBox<SearchStrategy> searchBox = new ComboBox<>();
         searchBox.getItems().addAll(controller.getSearchStrategies());
         searchBox.setOnAction(e -> {
@@ -191,7 +195,9 @@ public class JfxView implements Observer {
 
         final Button sendButton = new Button("Send");
 
-        sendButton.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/styles/buttons.css")).toExternalForm());
+        sendButton.getStylesheets()
+                .add(Objects.requireNonNull(getClass()
+                        .getResource("/styles/buttons.css")).toExternalForm());
         sendButton.getStyleClass().add("send-button");
         sendButton.setOnMouseEntered(event -> sendButton.setCursor(Cursor.HAND));
         // Set an action event for the "Send" button to handle clicks
@@ -335,16 +341,20 @@ public class JfxView implements Observer {
     }
 
     private Button createDeleteButton(final Message.Sender sender) {
-        final ImageView iconImageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/icons/remove-icon.png"))));
+        final ImageView iconImageView = new ImageView(
+                new Image(Objects.requireNonNull(getClass()
+                        .getResourceAsStream("/icons/remove-icon.png"))));
         iconImageView.setFitHeight(16);
         iconImageView.setFitWidth(16);
         final Button button = new Button();
         button.setGraphic(iconImageView);
         button.setStyle("-fx-background-color: transparent;");
         button.setOnMouseEntered(event -> button.setCursor(Cursor.HAND));
-        if (sender == Message.Sender.ELIZA){
+        if (sender == Message.Sender.ELIZA) {
             button.setAlignment(Pos.TOP_RIGHT);
-        } else button.setAlignment(Pos.TOP_LEFT);
+        } else {
+            button.setAlignment(Pos.TOP_LEFT);
+        }
 
         return button;
     }
