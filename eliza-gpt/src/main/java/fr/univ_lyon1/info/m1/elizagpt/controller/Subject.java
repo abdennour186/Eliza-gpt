@@ -1,7 +1,7 @@
 package fr.univ_lyon1.info.m1.elizagpt.controller;
 
-import fr.univ_lyon1.info.m1.elizagpt.command.Update;
-import fr.univ_lyon1.info.m1.elizagpt.view.ViewObserver;
+import fr.univ_lyon1.info.m1.elizagpt.model.payload.Update;
+import fr.univ_lyon1.info.m1.elizagpt.view.Observer;
 
 import java.util.ArrayList;
 
@@ -14,7 +14,7 @@ public abstract class Subject {
     /**
      * The list of observers subscribed to updates from this subject.
      */
-    private final ArrayList<ViewObserver> observers;
+    private final ArrayList<Observer> observers;
 
     /**
      * Enum representing possible actions that can trigger updates to observers.
@@ -67,7 +67,7 @@ public abstract class Subject {
      *
      * @param observer The observer to register.
      */
-    public void registerObserver(final ViewObserver observer) {
+    public void registerObserver(final Observer observer) {
         this.observers.add(observer);
     }
 
@@ -76,7 +76,7 @@ public abstract class Subject {
      *
      * @param observer The observer to unregister.
      */
-    public void unregisterObserver(final ViewObserver observer) {
+    public void unregisterObserver(final Observer observer) {
         this.observers.remove(observer);
     }
 }

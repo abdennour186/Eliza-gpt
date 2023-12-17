@@ -1,0 +1,56 @@
+/* styles.css */
+
+.combo-box {
+    -fx-background-color: #ffffff; /* Background color */
+    -fx-border-color: #a0a0a0; /* Border color */
+    -fx-border-width: 1;
+    -fx-border-radius: 5;
+}
+
+.combo-box .arrow-button {
+    -fx-background-color: #ffffff; /* Arrow button background color */
+}
+
+.combo-box .arrow-button .arrow {
+    -fx-background-color: #333333; /* Arrow color */
+}
+
+.combo-box .list-cell {
+    -fx-background-color: #ffffff; /* List cell background color */
+}
+
+.combo-box .list-view {
+    -fx-background-color: #ffffff; /* List view background color */
+    -fx-border-color: #a0a0a0; /* Border color */
+    -fx-border-width: 1;
+    -fx-border-radius: 5;
+}
+
+.combo-box .list-cell:hover {
+    -fx-background-color: #e0e0e0; /* Hovered list cell background color */
+    -fx-text-fill: black; /* Hovered text color */
+    -fx-font-weight: bold; /* Hovered text bold */
+}
+
+.combo-box .list-cell:filled:selected {
+    -fx-background-color: #3498db; /* Selected list cell background color */
+    -fx-text-fill: white; /* Selected text color */
+}
+
+.combo-box .prompt-text {
+    -fx-fill: #888888; /* Prompt text color */
+}
+
+.combo-box .text-field {
+    -fx-background-color: #ffffff; /* Text field background color */
+    -fx-border-color: #a0a0a0; /* Border color */
+    -fx-border-width: 1;
+    -fx-border-radius: 5;
+}
+
+.combo-box-popup .list-view {
+    -fx-background-color: #ffffff; /* Popup list view background color */
+    -fx-border-color: #a0a0a0; /* Border color */
+    -fx-border-width: 1;
+    -fx-border-radius: 5;
+}

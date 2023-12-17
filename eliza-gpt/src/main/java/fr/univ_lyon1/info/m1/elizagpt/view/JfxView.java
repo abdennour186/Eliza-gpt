@@ -1,26 +1,34 @@
 package fr.univ_lyon1.info.m1.elizagpt.view;
 
-import fr.univ_lyon1.info.m1.elizagpt.command.AddUpdate;
-import fr.univ_lyon1.info.m1.elizagpt.command.DeleteUpdate;
-import fr.univ_lyon1.info.m1.elizagpt.command.SearchUpdate;
-import fr.univ_lyon1.info.m1.elizagpt.command.Update;
+import fr.univ_lyon1.info.m1.elizagpt.model.payload.AddUpdate;
+import fr.univ_lyon1.info.m1.elizagpt.model.payload.DeleteUpdate;
+import fr.univ_lyon1.info.m1.elizagpt.model.payload.SearchUpdate;
+import fr.univ_lyon1.info.m1.elizagpt.model.payload.Update;
 import fr.univ_lyon1.info.m1.elizagpt.controller.Controller;
-import fr.univ_lyon1.info.m1.elizagpt.model.Message;
+import fr.univ_lyon1.info.m1.elizagpt.model.message.Message;
+import fr.univ_lyon1.info.m1.elizagpt.model.search.SearchStrategy;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Label;
+import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ComboBox;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+
 import java.util.Map;
-
+import java.util.HashMap;
+import java.util.Objects;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * The JfxView class represents the JavaFX-based
@@ -28,12 +36,14 @@ import java.util.Map;
  * It provides a chat-like interface where users
  * can interact with Eliza and view messages.
  */
-public class JfxView implements ViewObserver {
+public class JfxView implements Observer {
     private final VBox dialog;
     private TextField text = null;
     private TextField searchText = null;
     private Label searchTextLabel = null;
     private final Controller controller;
+    private ComboBox<SearchStrategy> searchComboBox = null;
+
 
     private final Map<Integer, HBox> messageToHbox = new HashMap<>();
 
@@ -67,7 +77,7 @@ public class JfxView implements ViewObserver {
 
         final Pane input = createInputWidget();
         root.getChildren().add(input);
-
+        controller.undoSearch();
         // Everything's ready: add it to the scene and display it
         final Scene scene = new Scene(root, width, height);
         stage.setScene(scene);
@@ -101,19 +111,53 @@ public class JfxView implements ViewObserver {
         final HBox firstLine = new HBox();
         final HBox secondLine = new HBox();
         firstLine.setAlignment(Pos.BASELINE_LEFT);
-        secondLine.setAlignment(Pos.BASELINE_LEFT);
+        firstLine.setSpacing(10); // Adjust spacing between components
+
         searchText = new TextField();
         searchText.setOnAction(e -> searchText());
-        firstLine.getChildren().add(searchText);
-        final Button send = new Button("Search");
-        send.setOnAction(e -> searchText());
+
+        searchComboBox = createComboBox();
+
+        final Button searchButton = new Button("Search");
+        searchButton.getStylesheets()
+                .add(Objects.requireNonNull(getClass()
+                        .getResource("/styles/buttons.css")).toExternalForm());
+        searchButton.getStyleClass().add("search-button");
+        searchButton.setOnAction(e -> searchText());
+        searchButton.setOnMouseEntered(event -> searchButton.setCursor(Cursor.HAND));
+
+
+        final Button undoSearchButton = new Button("Undo search");
+        undoSearchButton.getStylesheets()
+                .add(Objects.requireNonNull(getClass()
+                        .getResource("/styles/buttons.css")).toExternalForm());
+        undoSearchButton.getStyleClass().add("undo-search-button");
+        undoSearchButton.setOnAction(e -> controller.undoSearch());
+        undoSearchButton.setOnMouseEntered(event -> undoSearchButton.setCursor(Cursor.HAND));
+
+        firstLine.getChildren().addAll(searchText, searchButton, undoSearchButton, searchComboBox);
+
         searchTextLabel = new Label();
-        final Button undo = new Button("Undo search");
-        undo.setOnAction(e -> controller.undoSearch());
-        secondLine.getChildren().addAll(send, searchTextLabel, undo);
+        secondLine.getChildren().addAll(searchTextLabel);
+
         final VBox input = new VBox();
         input.getChildren().addAll(firstLine, secondLine);
+
         return input;
+    }
+
+    private ComboBox<SearchStrategy> createComboBox() {
+        ComboBox<SearchStrategy> searchBox = new ComboBox<>();
+        searchBox.getItems().addAll(controller.getSearchStrategies());
+        searchBox.setOnAction(e -> {
+            SearchStrategy strategy = searchBox.getSelectionModel().getSelectedItem();
+            controller.setSearchStrategy(strategy);
+        });
+        searchBox.setPromptText("Select search strategy");
+        searchBox.getStylesheets().add(Objects.requireNonNull(getClass()
+                                        .getResource("/styles/combo-box.css"))
+                                        .toExternalForm());
+        return searchBox;
     }
     /**
      * Handles the user's action when initiating a search.
@@ -143,8 +187,10 @@ public class JfxView implements ViewObserver {
      * @return A Pane containing the user input widget.
      */
     private Pane createInputWidget() {
-        final Pane input = new HBox();
+        final HBox input = new HBox();
         text = new TextField();
+
+        text.setPromptText("Type your message here");
 
         // Set an action event for the text field to handle pressing "Enter"
         text.setOnAction(e -> {
@@ -152,19 +198,32 @@ public class JfxView implements ViewObserver {
             text.setText("");
         });
 
-        final Button send = new Button("Send");
+        final Button sendButton = new Button("Send");
 
+        sendButton.getStylesheets()
+                .add(Objects.requireNonNull(getClass()
+                        .getResource("/styles/buttons.css")).toExternalForm());
+        sendButton.getStyleClass().add("send-button");
+        sendButton.setOnMouseEntered(event -> sendButton.setCursor(Cursor.HAND));
         // Set an action event for the "Send" button to handle clicks
-        send.setOnAction(e -> {
+        sendButton.setOnAction(e -> {
             sendMessage(text.getText());
             text.setText("");
         });
 
+        // Set Hgrow for the text field to make it take as much space as possible
+        HBox.setHgrow(text, Priority.ALWAYS);
+
+        // Set spacing between the text field and the button
+        input.setSpacing(10); // Adjust the spacing as needed
+
         // Add the text field and the "Send" button to the input pane
-        input.getChildren().addAll(text, send);
+        input.getChildren().addAll(text, sendButton);
 
         return input;
     }
+
+
 
 
     /**
@@ -178,7 +237,7 @@ public class JfxView implements ViewObserver {
     public void onMessageAddUpdate(final Update update) throws IllegalArgumentException {
         try {
             AddUpdate addUpdate = (AddUpdate) update;
-            HBox newHbox = createHboxFromMessage(addUpdate.getNewMessage());
+            HBox newHbox = createHBoxFromMessage(addUpdate.getNewMessage());
             messageToHbox.put(addUpdate.getNewMessage().getId(), newHbox);
             dialog.getChildren().add(newHbox);
         } catch (ClassCastException exception) {
@@ -220,7 +279,7 @@ public class JfxView implements ViewObserver {
         try {
             SearchUpdate searchUpdate = (SearchUpdate) update;
             searchTextLabel.setText("Searching for: " + searchUpdate.getSearchText());
-            ArrayList<Message> searchResult = searchUpdate.getSearchResult();
+            List<Message> searchResult = searchUpdate.getSearchResult();
             processSearchResult(searchResult);
         } catch (ClassCastException exception) {
              throw new IllegalArgumentException("Expected SearchUpdate object but found another");
@@ -240,7 +299,7 @@ public class JfxView implements ViewObserver {
             try {
                 SearchUpdate undoSearchUpdate = (SearchUpdate) update;
                 searchTextLabel.setText(null);
-                ArrayList<Message> allMessages = undoSearchUpdate.getSearchResult();
+                List<Message> allMessages = undoSearchUpdate.getSearchResult();
                 processSearchResult(allMessages);
             } catch (ClassCastException exception) {
                 throw new IllegalArgumentException("Expected SearchUpdate object"
@@ -255,24 +314,56 @@ public class JfxView implements ViewObserver {
      * @param message The message to be displayed.
      * @return An HBox containing the message label with appropriate styling.
      */
-    private HBox createHboxFromMessage(final Message message) {
+    private HBox createHBoxFromMessage(final Message message) {
+
         String messageText = message.getText();
+        HBox parentHBox = new HBox();
         HBox hBox = new HBox();
+
         final Label label = new Label(messageText);
 
-        label.setStyle(
-                message.getSender() == Message.Sender.ELIZA
-                        ? ELIZA_STYLE : USER_STYLE
-        );
-        hBox.setAlignment(
+
+        parentHBox.setAlignment(
                 message.getSender() == Message.Sender.ELIZA
                         ? Pos.BASELINE_LEFT : Pos.BASELINE_RIGHT
         );
 
-        hBox.getChildren().add(label);
+        hBox.setStyle(
+                message.getSender() == Message.Sender.ELIZA
+                        ? ELIZA_STYLE : USER_STYLE
+        );
 
-        hBox.setOnMouseClicked(e -> controller.deleteMessage(message.getId()));
-        return hBox;
+        final Button button = createDeleteButton(message.getSender());
+        button.setOnMouseClicked(e -> {
+            controller.deleteMessage(message.getId());
+        });
+        if (message.getSender() == Message.Sender.ELIZA) {
+            hBox.getChildren().addAll(label, button);
+        } else {
+            hBox.getChildren().addAll(button, label);
+        }
+
+        parentHBox.getChildren().add(hBox);
+        return parentHBox;
+    }
+
+    private Button createDeleteButton(final Message.Sender sender) {
+        final ImageView iconImageView = new ImageView(
+                new Image(Objects.requireNonNull(getClass()
+                        .getResourceAsStream("/icons/remove-icon.png"))));
+        iconImageView.setFitHeight(16);
+        iconImageView.setFitWidth(16);
+        final Button button = new Button();
+        button.setGraphic(iconImageView);
+        button.setStyle("-fx-background-color: transparent;");
+        button.setOnMouseEntered(event -> button.setCursor(Cursor.HAND));
+        if (sender == Message.Sender.ELIZA) {
+            button.setAlignment(Pos.TOP_RIGHT);
+        } else {
+            button.setAlignment(Pos.TOP_LEFT);
+        }
+
+        return button;
     }
 
 
@@ -283,12 +374,12 @@ public class JfxView implements ViewObserver {
      *
      * @param messages The list of messages resulting from a search operation.
      */
-    private void processSearchResult(final ArrayList<Message> messages) {
+    private void processSearchResult(final List<Message> messages) {
         messageToHbox.clear();
 
         ArrayList<HBox> result = new ArrayList<>();
         for (Message message : messages) {
-            HBox hBox = createHboxFromMessage(message);
+            HBox hBox = createHBoxFromMessage(message);
             result.add(hBox);
             messageToHbox.put(message.getId(), hBox);
         }

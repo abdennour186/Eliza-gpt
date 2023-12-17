@@ -1,14 +1,20 @@
 package fr.univ_lyon1.info.m1.elizagpt.controller;
 
-import fr.univ_lyon1.info.m1.elizagpt.command.AddUpdate;
-import fr.univ_lyon1.info.m1.elizagpt.command.DeleteUpdate;
-import fr.univ_lyon1.info.m1.elizagpt.command.SearchUpdate;
-import fr.univ_lyon1.info.m1.elizagpt.command.Update;
-import fr.univ_lyon1.info.m1.elizagpt.model.Message;
+import fr.univ_lyon1.info.m1.elizagpt.model.search.strategies.RegexSearchStrategy;
+import fr.univ_lyon1.info.m1.elizagpt.model.search.strategies.SubStringSearchStrategy;
+import fr.univ_lyon1.info.m1.elizagpt.model.search.strategies.WordSearchStrategy;
+import fr.univ_lyon1.info.m1.elizagpt.model.payload.AddUpdate;
+import fr.univ_lyon1.info.m1.elizagpt.model.payload.DeleteUpdate;
+import fr.univ_lyon1.info.m1.elizagpt.model.payload.SearchUpdate;
+import fr.univ_lyon1.info.m1.elizagpt.model.payload.Update;
+import fr.univ_lyon1.info.m1.elizagpt.model.message.Message;
 import fr.univ_lyon1.info.m1.elizagpt.model.MessageProcessor;
+import fr.univ_lyon1.info.m1.elizagpt.model.search.SearchStrategy;
 
 
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 
 /**
  * The Controller class serves as the controller in the MVC (Model-View-Controller) architecture.
@@ -59,7 +65,7 @@ public class Controller extends Subject {
      * @param text The text to search for in messages.
      */
     public void search(final String text) {
-        ArrayList<Message> result = model.search(text);
+        List<Message> result = model.search(text);
         Update searchUpdate = new SearchUpdate(text, result);
         notifyObservers(ACTION.SEARCH, searchUpdate);
     }
@@ -84,12 +90,35 @@ public class Controller extends Subject {
     }
 
     /**
-     * Generates an Eliza response for the given user message.
+     * Generates an Eliza GPT response based on the user's input.
      *
-     * @param userMessage The user's message for which an Eliza response is generated.
-     * @return The generated Eliza response.
+     * @param userMessage The user's input message.
+     * @return The generated Eliza GPT response.
      */
     public String generateElizaResponse(final String userMessage) {
         return model.generateElizaResponse(userMessage);
     }
+
+    /**
+     * Sets the search strategy for message searching.
+     *
+     * @param strategy The search strategy to be set.
+     */
+    public void setSearchStrategy(final SearchStrategy strategy) {
+        this.model.setSearchStrategy(strategy);
+    }
+
+    /**
+     * Gets a list of available search strategies.
+     *
+     * @return A list of search strategies.
+     */
+    public List<SearchStrategy> getSearchStrategies() {
+        return Arrays.asList(
+                SubStringSearchStrategy.getInstance(),
+                RegexSearchStrategy.getInstance(),
+                WordSearchStrategy.getInstance()
+        );
+    }
+
 }

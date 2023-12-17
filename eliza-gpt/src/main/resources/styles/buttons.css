@@ -1,0 +1,25 @@
+.search-button {
+    -fx-background-color: #4caf50; /* Green */
+    -fx-padding: 0 10;
+    -fx-text-fill: #fff;
+}
+
+.undo-search-button {
+    -fx-background-color: #f44336; /* Red */
+    -fx-padding: 0 10;
+    -fx-text-fill: #fff;
+}
+
+.send-button{
+    -fx-background-color: #3498db;
+    -fx-text-fill: White;
+    -fx-font-weight: bold;
+}
+
+.search-button:hover,
+.undo-search-button:hover,
+send-button:hover{
+    -fx-opacity: 0.8;
+}
+
+

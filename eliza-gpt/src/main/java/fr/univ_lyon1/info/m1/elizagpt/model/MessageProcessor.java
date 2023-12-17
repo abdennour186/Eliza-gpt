@@ -1,32 +1,84 @@
 package fr.univ_lyon1.info.m1.elizagpt.model;
 
+import fr.univ_lyon1.info.m1.elizagpt.model.message.Message;
+import fr.univ_lyon1.info.m1.elizagpt.model.message.MessageManager;
+import fr.univ_lyon1.info.m1.elizagpt.model.response.ResponseGenerator;
+import fr.univ_lyon1.info.m1.elizagpt.model.response.handlers.NameResponseHandler;
+import fr.univ_lyon1.info.m1.elizagpt.model.response.handlers.DefaultResponseHandler;
+import fr.univ_lyon1.info.m1.elizagpt.model.response.handlers.TeacherResponseHandler;
+import fr.univ_lyon1.info.m1.elizagpt.model.response.handlers.UserNameResponseHandler;
+import fr.univ_lyon1.info.m1.elizagpt.model.response.handlers.VerbResponseHandler;
+import fr.univ_lyon1.info.m1.elizagpt.model.response.handlers.BestClubHandler;
+import fr.univ_lyon1.info.m1.elizagpt.model.response.handlers.RandomResponseHandler;
+import fr.univ_lyon1.info.m1.elizagpt.model.response.handlers.ByeResponseHandler;
+import fr.univ_lyon1.info.m1.elizagpt.model.response.handlers.QuestionResponseHandler;
 
+import fr.univ_lyon1.info.m1.elizagpt.model.search.SearchStrategy;
+import fr.univ_lyon1.info.m1.elizagpt.model.search.strategies.SubStringSearchStrategy;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /**
  * The MessageProcessor class is responsible for processing messages in a chatbot system.
  * It offers functionalities such as normalizing text, adding and deleting messages,
  * searching for messages, generating responses, and more. This class acts as a core component
  * in managing and interpreting user interactions.
+ *
+ * <p>This class implements the {@link UserName} interface
+ * to handle user name-related functionalities.</p>
+ *
+ * @see UserName
+ * @version 1.1
  */
-public class MessageProcessor {
+public class MessageProcessor implements UserName {
 
-    private final ArrayList<Message> messages;
-    private final Random random = new Random();
+    private final List<Message> messages;
+    private final MessageManager messageManager;
+    private final ResponseGenerator responseGenerator;
+    private SearchStrategy searchStrategy;
+    private String userName;
 
     /**
      * Constructs a new MessageProcessor with an empty list of messages.
      */
     public MessageProcessor() {
         this.messages = new ArrayList<>();
-        //this.messages.add(new Message("Bonjour" , Message.Sender.ELIZA));
+        this.messageManager = new MessageManager(this.messages);
+        this.responseGenerator = new ResponseGenerator(
+                Arrays.asList(
+                        new NameResponseHandler(this),
+                        new UserNameResponseHandler(this),
+                        new TeacherResponseHandler(),
+                        new VerbResponseHandler(),
+                        new BestClubHandler(),
+                        new QuestionResponseHandler(),
+                        new ByeResponseHandler(this),
+                        new RandomResponseHandler(),
+                        new DefaultResponseHandler(this)
+                )
+        );
+        this.addMessage("Bonjour", Message.Sender.ELIZA);
+        this.searchStrategy = SubStringSearchStrategy.getInstance();
+    }
+
+    /**
+     * Constructs a new MessageProcessor with specified parameters.
+     *
+     * @param messageManager The message manager to use.
+     * @param searchStrategy The search strategy to use.
+     * @param responseGenerator The response generator to use.
+     * @param messages The initial list of messages.
+     */
+    public MessageProcessor(final MessageManager messageManager,
+                            final SearchStrategy searchStrategy,
+                            final ResponseGenerator responseGenerator,
+                            final ArrayList<Message> messages) {
+        this.messages = messages;
+        this.messageManager = messageManager;
+        this.responseGenerator = responseGenerator;
+        this.searchStrategy = searchStrategy;
     }
 
     /**
@@ -35,48 +87,12 @@ public class MessageProcessor {
      * @param text The text to be normalized.
      * @return The normalized text.
      */
-
     public String normalize(final String text) {
         return text.replaceAll("\\s+", " ")
                 .replaceAll("^\\s+", "")
                 .replaceAll("\\s+$", "")
                 .replaceAll("[^\\.!?:]$", "$0.");
     }
-
-    /**
-     * Inner class representing a verb with different forms for first singular
-     * and second plural persons.
-     */
-    public static class Verb {
-        private final String firstSingular;
-        private final String secondPlural;
-
-        public String getFirstSingular() {
-            return firstSingular;
-        }
-
-        public String getSecondPlural() {
-            return secondPlural;
-        }
-
-        Verb(final String firstSingular, final String secondPlural) {
-            this.firstSingular = firstSingular;
-            this.secondPlural = secondPlural;
-        }
-    }
-
-    protected static final List<Verb> VERBS = Arrays.asList(
-            new Verb("suis", "êtes"),
-            new Verb("vais", "allez"),
-            new Verb("dis", "dites"),
-            new Verb("ai", "avez"),
-            new Verb("fais", "faites"),
-            new Verb("sais", "savez"),
-            // Question 02
-            new Verb("peux", "pouvez"),
-            new Verb("dois", "devez")
-    );
-
 
     /**
      * Adds a message to the list of messages after normalizing it.
@@ -86,10 +102,8 @@ public class MessageProcessor {
      * @return The newly created and added Message object.
      */
     public Message addMessage(final String text, final Message.Sender sender) {
-        String message = normalize(text);
-        Message newMessage = new Message(message, sender);
-        this.messages.add(newMessage);
-        return newMessage;
+        String normalizedText = normalize(text);
+        return this.messageManager.addMessage(normalizedText, sender);
     }
 
     /**
@@ -98,26 +112,17 @@ public class MessageProcessor {
      * @param messageId The ID of the message to be deleted.
      */
     public void deleteMessage(final int messageId) {
-        this.messages.removeIf(message -> message.getId() == messageId);
+        this.messageManager.deleteMessage(messageId);
     }
+
     /**
      * Searches for messages containing the specified text.
      *
      * @param text The text to search for within messages.
      * @return A list of messages that contain the specified text.
      */
-    public ArrayList<Message> search(final String text) {
-        ArrayList<Message> result = new ArrayList<>();
-        Pattern pattern;
-        Matcher matcher;
-        for (Message message : messages) {
-            pattern = Pattern.compile(text, Pattern.CASE_INSENSITIVE);
-            matcher = pattern.matcher(message.getText());
-            if (matcher.find()) {
-                result.add(message);
-            }
-        }
-        return result;
+    public List<Message> search(final String text) {
+        return searchStrategy.search(messages, text);
     }
 
     /**
@@ -127,132 +132,8 @@ public class MessageProcessor {
      * @return Eliza's response to the user's message.
      */
     public String generateElizaResponse(final String userMessage) {
-
         String normalizedText = normalize(userMessage);
-
-        Pattern pattern;
-        Matcher matcher;
-
-        // First, try to answer specifically to what the user said
-        pattern = Pattern.compile(".*Je m'appelle (.*)\\.", Pattern.CASE_INSENSITIVE);
-        matcher = pattern.matcher(normalizedText);
-        if (matcher.matches()) {
-            return "Bonjour " + matcher.group(1) + ".";
-        }
-
-        pattern = Pattern.compile("Quel est mon nom \\?", Pattern.CASE_INSENSITIVE);
-        matcher = pattern.matcher(normalizedText);
-        if (matcher.matches()) {
-            if (getUserName() != null) {
-                return "Votre nom est " + getUserName() + ".";
-            } else {
-                return "Je ne connais pas votre nom.";
-            }
-        }
-
-        pattern = Pattern.compile("Qui est le plus (.*) \\?", Pattern.CASE_INSENSITIVE);
-        matcher = pattern.matcher(normalizedText);
-        if (matcher.matches()) {
-            return "Le plus " + matcher.group(1) + " est bien sûr votre enseignant de MIF01!";
-        }
-
-        pattern = Pattern.compile("(Je .*)\\.", Pattern.CASE_INSENSITIVE);
-        matcher = pattern.matcher(normalizedText);
-        if (matcher.matches()) {
-            final String startQuestion = pickRandom(new String[]{
-                    "Pourquoi dites-vous que ",
-                    "Pourquoi pensez-vous que ",
-                    "Êtes-vous sûr que ",
-            });
-            return startQuestion + firstToSecondPerson(matcher.group(1)) + " ?";
-        }
-
-        // Questions Detector
-        pattern = Pattern.compile(".*\\?");
-        matcher = pattern.matcher(normalizedText);
-        if (matcher.matches()) {
-            final String randomResponse = pickRandom(new String[]{
-                    "Je vous renvoie la question.",
-                    "Ici, c'est moi qui pose les questions.",
-            });
-            return randomResponse;
-        }
-
-        // Nothing clever to say, answer randomly
-        if (random.nextBoolean()) {
-            return "Il fait beau aujourd'hui, vous ne trouvez pas ?";
-        }
-        if (random.nextBoolean()) {
-            return "Je ne comprends pas.";
-        }
-        if (random.nextBoolean()) {
-            return "Hmmm, hmm ...";
-        }
-
-        // Default answer
-        if (getUserName() != null) {
-            return "Qu'est-ce qui vous fait dire cela, " + getUserName() + " ?";
-        } else {
-            return "Qu'est-ce qui vous fait dire cela ?";
-        }
-    }
-
-    /**
-     * Retrieves the user's name from previously input messages.
-     *
-     * @return The user's name if found, otherwise null.
-     */
-
-    public String getUserName() {
-        String result = null;
-        Pattern pattern = Pattern.compile("Je m'appelle (.*)\\.", Pattern.CASE_INSENSITIVE);
-        Matcher matcher;
-        ArrayList<Message> userMessages = (ArrayList<Message>) messages.stream().filter(
-                message -> message.getSender() == Message.Sender.USER
-        ).collect(Collectors.toList());
-
-        for (Message message : userMessages) {
-            matcher = pattern.matcher(message.getText());
-            if (matcher.matches()) {
-                result = matcher.group(1);
-            }
-        }
-        return result;
-    }
-
-    /**
-     * Converts first-person statements to second-person.
-     *
-     * @param text The text to be converted.
-     * @return The converted text.
-     */
-    public String firstToSecondPerson(final String text) {
-        String processedText = text
-                .replaceAll("[Jj]e ([a-z]*)e ", "vous $1ez ");
-        for (Verb v : VERBS) {
-            processedText = processedText.replaceAll(
-                    "[Jj]e " + v.getFirstSingular(),
-                    "vous " + v.getSecondPlural());
-        }
-        processedText = processedText
-                .replaceAll("[Jj]e ([a-z]*)s ", "vous $1ssez ")
-                .replace("mon ", "votre ")
-                .replace("ma ", "votre ")
-                .replace("mes ", "vos ")
-                .replace("moi", "vous");
-        return processedText;
-    }
-
-
-    /**
-     * Randomly selects an element from an array.
-     *
-     * @param <T> The type of elements in the array.
-     * @param array The array from which to pick an element.
-     * @return A randomly selected element from the array.
-     */
-    public <T> T pickRandom(final T[] array) {
-        return array[random.nextInt(array.length)];
+        return responseGenerator.generateElizaResponse(normalizedText);
     }
 
     /**
@@ -260,11 +141,35 @@ public class MessageProcessor {
      *
      * @return The list of messages.
      */
-    public ArrayList<Message> getMessages() {
+    public List<Message> getMessages() {
         return messages;
     }
 
+    /**
+     * Sets the search strategy for message searching.
+     *
+     * @param strategy The search strategy to set.
+     */
+    public void setSearchStrategy(final SearchStrategy strategy) {
+        this.searchStrategy = strategy;
+    }
 
+    /**
+     * Gets the current search strategy.
+     *
+     * @return The current search strategy.
+     */
+    public SearchStrategy getSearchStrategy() {
+        return searchStrategy;
+    }
 
+    @Override
+    public void setUserName(final String userName) {
+        this.userName = userName;
+    }
 
+    @Override
+    public String getUserName() {
+        return this.userName;
+    }
 }

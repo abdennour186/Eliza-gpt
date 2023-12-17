@@ -1,4 +1,4 @@
-package fr.univ_lyon1.info.m1.elizagpt.model;
+package fr.univ_lyon1.info.m1.elizagpt.model.message;
 
 /**
  * Represents a message in the system.
