@@ -38,15 +38,18 @@ public class Controller extends Subject {
     }
 
     /**
-     * Adds a user message to the model and notifies observers of the action.
-     *
+     * Adds a user message to the model,
+     * notifies the observers of the new user message.
+     * and calls generate eliza response method to generate a response,
      * @param text The text content of the user message.
      */
     public void addUserMessage(final String text) {
         Message newMessage = model.addMessage(text, Message.Sender.USER);
         Update addUpdate = new AddUpdate(newMessage);
         notifyObservers(ACTION.ADD, addUpdate);
+        replyToUser(newMessage.getText());
     }
+
 
     /**
      * Adds an Eliza message to the model and notifies observers of the action.
@@ -90,14 +93,27 @@ public class Controller extends Subject {
     }
 
     /**
-     * Generates an Eliza GPT response based on the user's input.
+     * Generates an Eliza response for the given user message.
      *
-     * @param userMessage The user's input message.
-     * @return The generated Eliza GPT response.
+     * @param userMessage The user's message for which an Eliza response is generated.
+     * @return eliza response
      */
     public String generateElizaResponse(final String userMessage) {
         return model.generateElizaResponse(userMessage);
     }
+
+    /**
+     * Generates an Eliza response for the given user message.
+     * calls addElizaMessage to add the response as
+     * an Eliza message to the model,
+     *
+     * @param userMessage The user's message to which Eliza responds.
+     */
+    private void replyToUser(final String userMessage) {
+        String response = generateElizaResponse(userMessage);
+        this.addElizaMessage(response);
+    }
+
 
     /**
      * Sets the search strategy for message searching.

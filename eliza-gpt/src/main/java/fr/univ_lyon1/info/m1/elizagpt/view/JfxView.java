@@ -91,14 +91,8 @@ public class JfxView implements Observer {
     static final String USER_STYLE = "-fx-background-color: #A0E0A0; " + BASE_STYLE;
     static final String ELIZA_STYLE = "-fx-background-color: #A0A0E0; " + BASE_STYLE;
 
-    private void replyToUser(final String text) {
-        controller.addElizaMessage(text);
-    }
-
     private void sendMessage(final String text) {
         controller.addUserMessage(text);
-        String elizaResponse = controller.generateElizaResponse(text);
-        replyToUser(elizaResponse);
     }
 
     /**

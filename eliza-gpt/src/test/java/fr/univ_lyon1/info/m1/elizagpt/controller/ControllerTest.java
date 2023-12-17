@@ -30,6 +30,9 @@ class ControllerTest {
     @Test
     void addUserMessage() {
         String inputMessage = "a new message";
+        Message expectedMessage = new Message(inputMessage, Message.Sender.USER);
+        when(messageProcessorMock.addMessage(inputMessage, Message.Sender.USER))
+                .thenReturn(expectedMessage);
         controller.addUserMessage(inputMessage);
 
         verify(messageProcessorMock).addMessage(inputMessage, Message.Sender.USER);
